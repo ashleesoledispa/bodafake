@@ -41,13 +41,32 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* =========================================
+   APP
+========================================= */
+
 .app-shell {
   position: relative;
-
   width: 100%;
   min-height: 100vh;
-
   padding-bottom: 120px;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   LOADING / REDIRECT
+========================================= */
+
+.setup-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #080808;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
 }
 
 /* =========================================
@@ -56,33 +75,24 @@ a {
 
 .background-video {
   position: fixed;
-
-  top: 0;
-  left: 0;
-
+  inset: 0;
   width: 100vw;
   height: 100vh;
-
   object-fit: cover;
-
-  z-index: -2;
-
+  object-position: center center;
+  z-index: 0;
   pointer-events: none;
+  display: block;
+  background: #000;
 }
 
 .background-overlay {
   position: fixed;
-
-  top: 0;
-  left: 0;
-
+  inset: 0;
   width: 100vw;
   height: 100vh;
-
   background: rgba(0, 0, 0, 0.35);
-
-  z-index: -1;
-
+  z-index: 1;
   pointer-events: none;
 }
 
@@ -93,7 +103,7 @@ a {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 100 !important;
 
   width: 100%;
   height: 94px;
@@ -115,41 +125,31 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 17px;
-
   height: 100%;
 }
 
 .bodafake-logo {
   display: block;
-
   width: auto;
   height: 58px;
-
   max-width: 300px;
-
   object-fit: contain;
 }
 
 .brand-by {
   color: #111111;
-
   font-size: 15px;
   font-weight: 600;
   line-height: 1;
-
   letter-spacing: -0.02em;
 }
 
 .vertigo-logo {
   display: block;
-
   width: auto;
   height: 59px;
-
   max-width: 150px;
-
   object-fit: contain;
 }
 
@@ -171,7 +171,6 @@ a {
   justify-content: center;
 
   gap: 5px;
-
   padding: 0;
 
   border: none;
@@ -190,12 +189,9 @@ a {
 
 .menu-button span {
   display: block;
-
   width: 24px;
   height: 2px;
-
   border-radius: 20px;
-
   background: #080808;
 
   transition:
@@ -205,7 +201,6 @@ a {
 
 .menu-button:hover {
   background: #f0eee8;
-
   transform: translateY(-50%) scale(1.04);
 }
 
@@ -214,29 +209,26 @@ a {
 ========================================= */
 
 .event-heading {
+  position: relative;
+  z-index: 2;
+
   width: min(1280px, calc(100% - 84px));
-
   margin: 0 auto;
-
   padding: 82px 0 52px;
 }
 
 .eyebrow {
   margin-bottom: 19px;
-
   color: var(--muted);
-
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.23em;
   line-height: 1.2;
-
   text-transform: uppercase;
 }
 
 .event-heading h1 {
   color: var(--text);
-
   font-size: clamp(48px, 6.2vw, 88px);
   font-weight: 500;
   letter-spacing: -0.065em;
@@ -245,14 +237,21 @@ a {
 
 .heading-description {
   max-width: 400px;
-
   margin-top: 27px;
-
   color: var(--muted);
-
   font-size: 14px;
   font-weight: 400;
   line-height: 1.55;
+}
+
+.photo-prompt {
+  max-width: 850px;
+  margin-top: 34px;
+  color: var(--text);
+  font-size: clamp(32px, 4.2vw, 58px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
 }
 
 /* =========================================
@@ -260,16 +259,16 @@ a {
 ========================================= */
 
 .photo-wall {
-  width: min(1280px, calc(100% - 84px));
+  position: relative;
+  z-index: 2;
 
+  width: min(1280px, calc(100% - 84px));
   margin: 0 auto;
 
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 30px 28px;
-
   align-items: start;
 }
 
@@ -279,13 +278,11 @@ a {
 
 .polaroid {
   position: relative;
-
   width: 100%;
 
   padding: 12px 12px 22px;
 
   background: var(--paper);
-
   color: var(--dark-text);
 
   box-shadow:
@@ -297,6 +294,10 @@ a {
   transition:
     transform 280ms ease,
     box-shadow 280ms ease;
+
+  cursor: pointer;
+
+  outline: none;
 }
 
 .polaroid:nth-child(2n) {
@@ -311,8 +312,9 @@ a {
   transform: rotate(0.7deg);
 }
 
-.polaroid:hover {
-  z-index: 2;
+.polaroid:hover,
+.polaroid:focus-visible {
+  z-index: 5;
 
   transform: translateY(-7px) rotate(0deg);
 
@@ -329,7 +331,6 @@ a {
   position: relative;
 
   width: 100%;
-
   aspect-ratio: 1 / 1;
 
   overflow: hidden;
@@ -348,7 +349,8 @@ a {
   transition: transform 500ms ease;
 }
 
-.polaroid:hover .photo-frame img {
+.polaroid:hover .photo-frame img,
+.polaroid:focus-visible .photo-frame img {
   transform: scale(1.025);
 }
 
@@ -380,14 +382,110 @@ a {
 }
 
 /* =========================================
+   PHOTO LIGHTBOX
+========================================= */
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: rgba(0, 0, 0, 0.88);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.photo-lightbox-content {
+  position: relative;
+
+  width: min(900px, 100%);
+  max-height: calc(100vh - 60px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-lightbox-content img {
+  display: block;
+
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 130px);
+
+  object-fit: contain;
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.photo-lightbox-close {
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+
+  z-index: 2010;
+
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.photo-lightbox-info {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: 12px;
+
+  color: #fff;
+}
+
+.photo-lightbox-info strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.photo-lightbox-info span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+}
+
+/* =========================================
    CAPTURE BUTTON
 ========================================= */
 
 .capture-button {
-  position: fixed;
+  position: fixed !important;
   right: 28px;
   bottom: 28px;
-  z-index: 90;
+  z-index: 200 !important;
 
   display: flex;
   align-items: center;
@@ -420,7 +518,6 @@ a {
 
 .capture-button:hover {
   background: #ffffff;
-
   transform: translateY(-3px);
 
   box-shadow:
@@ -461,7 +558,6 @@ a {
 @media (max-width: 1000px) {
   .topbar {
     height: 86px;
-
     padding: 0 28px;
   }
 
@@ -494,7 +590,6 @@ a {
 
   .photo-wall {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
     gap: 24px;
   }
 }
@@ -505,24 +600,28 @@ a {
 
 @media (max-width: 600px) {
   .app-shell {
+    min-height: 100svh;
     padding-bottom: 100px;
+  }
+
+  .background-video {
+    width: 100%;
+    height: 100svh;
+    object-fit: cover;
   }
 
   .topbar {
     height: 76px;
-
     padding: 0 58px 0 17px;
   }
 
   .brand-lockup {
     gap: 9px;
-
     width: 100%;
   }
 
   .bodafake-logo {
     height: 39px;
-
     max-width: 165px;
   }
 
@@ -532,7 +631,6 @@ a {
 
   .vertigo-logo {
     height: 39px;
-
     max-width: 88px;
   }
 
@@ -551,48 +649,38 @@ a {
 
   .event-heading {
     width: calc(100% - 34px);
-
     padding: 49px 0 32px;
   }
 
   .eyebrow {
     margin-bottom: 15px;
-
     font-size: 8px;
-
     letter-spacing: 0.19em;
   }
 
   .event-heading h1 {
     font-size: clamp(45px, 14vw, 68px);
-
     line-height: 0.9;
     letter-spacing: -0.06em;
   }
 
   .heading-description {
     max-width: 280px;
-
     margin-top: 20px;
-
     font-size: 12px;
     line-height: 1.55;
   }
 
   .photo-prompt {
-  max-width: 330px;
-
-  margin-top: 24px;
-
-  font-size: clamp(28px, 8.5vw, 42px);
-  line-height: 0.98;
-}
+    max-width: 330px;
+    margin-top: 24px;
+    font-size: clamp(28px, 8.5vw, 42px);
+    line-height: 0.98;
+  }
 
   .photo-wall {
     width: calc(100% - 34px);
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
     gap: 13px;
   }
 
@@ -622,7 +710,6 @@ a {
 
   .photo-time {
     margin-top: 3px;
-
     font-size: 7.5px;
   }
 
@@ -646,6 +733,36 @@ a {
     width: 8px;
     height: 8px;
   }
+
+  /* LIGHTBOX MOBILE */
+
+  .photo-lightbox {
+    padding: 18px;
+  }
+
+  .photo-lightbox-content {
+    width: 100%;
+    max-height: calc(100svh - 36px);
+  }
+
+  .photo-lightbox-content img {
+    max-width: 100%;
+    max-height: calc(100svh - 110px);
+  }
+
+  .photo-lightbox-close {
+    top: 14px;
+    right: 14px;
+
+    width: 42px;
+    height: 42px;
+
+    font-size: 28px;
+  }
+
+  .photo-lightbox-info {
+    padding-top: 10px;
+  }
 }
 
 /* =========================================
@@ -655,7 +772,6 @@ a {
 @media (max-width: 370px) {
   .topbar {
     height: 70px;
-
     padding: 0 49px 0 11px;
   }
 
@@ -679,7 +795,6 @@ a {
 
   .menu-button {
     right: 8px;
-
     width: 38px;
     height: 38px;
   }
@@ -690,13 +805,11 @@ a {
 
   .event-heading {
     width: calc(100% - 26px);
-
     padding-top: 42px;
   }
 
   .photo-wall {
     width: calc(100% - 26px);
-
     gap: 10px;
   }
 
@@ -734,43 +847,43 @@ a {
   }
 }
 
-.photo-prompt {
-  max-width: 850px;
-
-  margin-top: 34px;
-
-  color: var(--text);
-
-  font-size: clamp(32px, 4.2vw, 58px);
-  font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
-}
-
 /* =========================================================
    SETUP
 ========================================================= */
 
 .setup-page {
+  position: relative;
+
   min-height: 100vh;
+  min-height: 100svh;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 32px;
+
   background: #080808;
   color: #fff;
 }
 
 .setup-card {
+  position: relative;
+
   width: min(560px, 100%);
+
   padding: 48px;
+
   background: rgba(255, 255, 255, 0.96);
   color: #080808;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35);
 }
 
 .setup-eyebrow {
   margin: 0 0 18px;
+
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -778,6 +891,7 @@ a {
 
 .setup-card h1 {
   margin: 0;
+
   font-size: clamp(38px, 6vw, 64px);
   line-height: 0.95;
   letter-spacing: -0.06em;
@@ -786,16 +900,21 @@ a {
 
 .setup-description {
   max-width: 430px;
+
   margin: 26px 0 38px;
+
   font-size: 17px;
   line-height: 1.45;
 }
 
 .setup-form label {
   display: block;
+
   margin-bottom: 9px;
+
   font-size: 12px;
   font-weight: 700;
+
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -803,12 +922,17 @@ a {
 .setup-form input {
   width: 100%;
   height: 58px;
+
   padding: 0 18px;
+
   border: 1px solid #cfcfcf;
+
   background: #fff;
   color: #080808;
+
   font-family: inherit;
   font-size: 17px;
+
   outline: none;
 }
 
@@ -819,13 +943,18 @@ a {
 .setup-button {
   width: 100%;
   min-height: 58px;
+
   margin-top: 16px;
+
   border: 0;
+
   background: #080808;
   color: #fff;
+
   font-family: inherit;
   font-size: 15px;
   font-weight: 700;
+
   cursor: pointer;
 }
 
@@ -836,29 +965,71 @@ a {
 
 .setup-skip {
   width: 100%;
+
   margin-top: 16px;
+
   border: 0;
+
   background: transparent;
   color: #555;
+
   font-family: inherit;
   font-size: 13px;
+
   cursor: pointer;
 }
 
+/* =========================================
+   SETUP LOGO
+========================================= */
+
+.setup-brand {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: -64px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 48px;
+}
+
+.setup-brand img {
+  display: block;
+
+  width: auto;
+  max-width: 170px;
+  height: 30px;
+
+  object-fit: contain;
+}
+
+/* =========================================
+   IOS INSTRUCTIONS
+========================================= */
+
 .ios-instructions {
   margin: 32px 0;
+
   border-top: 1px solid #ddd;
 }
 
 .ios-step {
   display: flex;
+
   gap: 20px;
+
   padding: 19px 0;
+
   border-bottom: 1px solid #ddd;
 }
 
 .ios-step span {
   min-width: 25px;
+
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -866,10 +1037,10 @@ a {
 
 .ios-step p {
   margin: 0;
+
   font-size: 15px;
   line-height: 1.4;
 }
-
 
 /* =========================================================
    CAMERA
@@ -878,52 +1049,65 @@ a {
 .camera-page {
   position: fixed;
   inset: 0;
+
   display: flex;
   flex-direction: column;
+
   background: #000;
   color: #fff;
 }
 
 .camera-header {
   position: absolute;
+
   top: 0;
   left: 0;
   right: 0;
+
   z-index: 10;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 24px;
 }
 
 .camera-back,
 .camera-name {
   border: 0;
+
   color: #fff;
+
   font-family: inherit;
   font-size: 13px;
 }
 
 .camera-back {
   background: rgba(0, 0, 0, 0.45);
+
   padding: 10px 14px;
+
   cursor: pointer;
 }
 
 .camera-name {
   padding: 10px 14px;
+
   background: rgba(0, 0, 0, 0.45);
 }
 
 .camera-view {
   position: absolute;
   inset: 0;
+
   overflow: hidden;
 }
 
 .camera-view video {
   width: 100%;
   height: 100%;
+
   object-fit: cover;
 }
 
@@ -933,63 +1117,85 @@ a {
 
 .camera-error {
   position: absolute;
+
   top: 50%;
   left: 50%;
+
   width: min(400px, calc(100% - 48px));
+
   transform: translate(-50%, -50%);
+
   text-align: center;
 }
 
 .camera-error h1 {
   margin: 0 0 12px;
+
   font-size: 30px;
   letter-spacing: -0.04em;
 }
 
 .camera-error p {
   margin: 0;
+
   color: #bbb;
+
   line-height: 1.5;
 }
 
 .camera-controls {
   position: absolute;
+
   z-index: 10;
+
   bottom: 35px;
   left: 0;
   right: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 50px;
 }
 
 .shutter {
   width: 78px;
   height: 78px;
+
   padding: 5px;
+
   border: 3px solid #fff;
   border-radius: 50%;
+
   background: transparent;
+
   cursor: pointer;
 }
 
 .shutter span {
   display: block;
+
   width: 100%;
   height: 100%;
+
   border-radius: 50%;
+
   background: #fff;
 }
 
 .camera-switch {
   width: 48px;
   height: 48px;
+
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
+
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
+
   font-size: 23px;
+
   cursor: pointer;
 }
 
@@ -1004,35 +1210,46 @@ a {
 .photo-preview {
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   background: #000;
 }
 
 .photo-preview img {
   width: 100%;
   height: 100%;
+
   object-fit: contain;
 }
 
 .preview-actions {
   position: absolute;
+
   z-index: 10;
+
   bottom: 35px;
   left: 24px;
   right: 24px;
+
   display: flex;
+
   gap: 12px;
 }
 
 .preview-actions button {
   flex: 1;
+
   min-height: 56px;
+
   border: 0;
+
   font-family: inherit;
   font-size: 15px;
   font-weight: 700;
+
   cursor: pointer;
 }
 
@@ -1046,19 +1263,182 @@ a {
   color: #080808;
 }
 
+.preview-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* =========================================================
-   MOBILE
+   WALL STATES
 ========================================================= */
+
+.wall-loading,
+.wall-empty {
+  grid-column: 1 / -1;
+
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: #fff;
+
+  padding: 40px;
+}
+
+.wall-loading {
+  font-size: 15px;
+}
+
+.wall-empty p {
+  margin: 0;
+
+  font-size: clamp(25px, 4vw, 45px);
+
+  letter-spacing: -0.04em;
+}
+
+.wall-empty span {
+  margin-top: 10px;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 14px;
+}
+
+.setup-error {
+  margin: 12px 0 0;
+
+  color: #c00000;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   PUSH MODAL
+========================================================= */
+
+.push-modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.push-modal {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 30px 24px 24px;
+
+  background: #fff;
+  color: #000;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.push-modal-eyebrow {
+  margin: 0 0 12px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+}
+
+.push-modal h2 {
+  margin: 0 0 12px;
+
+  font-size: 28px;
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+.push-modal > p:not(.push-modal-eyebrow) {
+  margin: 0 0 24px;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.push-primary-button {
+  width: 100%;
+  min-height: 52px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #000;
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.push-primary-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.push-secondary-button {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 10px;
+
+  border: 0;
+
+  background: transparent;
+  color: #000;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+/* =========================================
+   MOBILE SETUP
+========================================= */
 
 @media (max-width: 600px) {
   .setup-page {
+    min-height: 100svh;
+
     padding: 18px;
+
     align-items: flex-end;
   }
 
   .setup-card {
-    padding: 30px 24px;
+    width: 100%;
+
+    padding: 30px 24px 34px;
+
+    margin-bottom: 58px;
   }
 
   .setup-card h1 {
@@ -1068,6 +1448,25 @@ a {
   .setup-description {
     font-size: 15px;
     margin: 22px 0 30px;
+  }
+
+  .setup-brand {
+    bottom: -55px;
+    height: 42px;
+  }
+
+  .setup-brand img {
+    max-width: 150px;
+    height: 27px;
+  }
+
+  .ios-step {
+    gap: 14px;
+    padding: 17px 0;
+  }
+
+  .ios-step p {
+    font-size: 14px;
   }
 
   .camera-header {
@@ -1084,288 +1483,3 @@ a {
     height: 72px;
   }
 }
-
-.setup-error {
-  margin: 12px 0 0;
-  color: #c00000;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-/* =========================================================
-   PHOTO WALL REAL
-========================================================= */
-
-.wall-loading,
-.wall-empty {
-  grid-column: 1 / -1;
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  padding: 40px;
-}
-
-.wall-loading {
-  font-size: 15px;
-}
-
-.wall-empty p {
-  margin: 0;
-  font-size: clamp(25px, 4vw, 45px);
-  letter-spacing: -0.04em;
-}
-
-.wall-empty span {
-  margin-top: 10px;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 14px;
-}
-
-.polaroid-0 {
-  transform: rotate(-1.5deg);
-}
-
-.polaroid-1 {
-  transform: rotate(1.2deg);
-}
-
-.polaroid-2 {
-  transform: rotate(-0.8deg);
-}
-
-.polaroid-3 {
-  transform: rotate(1.8deg);
-}
-
-.polaroid:hover {
-  transform: rotate(0deg) translateY(-6px);
-  z-index: 5;
-}
-
-
-/* =========================================================
-   CAMERA ERROR
-========================================================= */
-
-.camera-error-button {
-  margin-top: 24px;
-  padding: 14px 20px;
-  border: 0;
-  background: #fff;
-  color: #000;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.preview-actions button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
-/* =========================================================
-   BACKGROUND VIDEO
-========================================================= */
-
-.background-video {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.background-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.background-video {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.background-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.topbar,
-.event-heading,
-.photo-wall {
-  position: relative;
-  z-index: 2;
-}
-
-.topbar {
-  z-index: 100 !important;
-}
-
-.capture-button {
-  position: fixed !important;
-  z-index: 200 !important;
-}
-.topbar {
-  z-index: 100 !important;
-}
-
-.push-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(8px);
-}
-
-.push-modal {
-  width: 100%;
-  max-width: 420px;
-  padding: 30px 24px 24px;
-  background: #fff;
-  color: #000;
-  border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-}
-
-.push-modal-eyebrow {
-  margin: 0 0 12px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-}
-
-.push-modal h2 {
-  margin: 0 0 12px;
-  font-size: 28px;
-  line-height: 1.05;
-  font-weight: 700;
-}
-
-.push-modal > p:not(.push-modal-eyebrow) {
-  margin: 0 0 24px;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.push-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 26px;
-}
-
-.push-steps > div {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.push-steps strong {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 28px;
-  width: 28px;
-  height: 28px;
-  border: 1px solid #000;
-  border-radius: 50%;
-  font-size: 13px;
-}
-
-.push-steps span {
-  padding-top: 4px;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.push-primary-button {
-  width: 100%;
-  min-height: 52px;
-  border: 0;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.push-primary-button:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.push-secondary-button {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-  padding: 10px;
-  border: 0;
-  background: transparent;
-  color: #000;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.push-status {
-  position: fixed;
-  left: 50%;
-  bottom: 24px;
-  z-index: 1000;
-  transform: translateX(-50%);
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: #fff;
-  color: #000;
-  font-size: 13px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-}
-
-.push-status {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.push-status button {
-  border: 1px solid #000;
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: #000;
-  color: #fff;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.push-status button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-

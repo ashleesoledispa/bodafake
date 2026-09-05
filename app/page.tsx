@@ -50,8 +50,26 @@ function formatRelativeTime(dateString: string) {
 
 export default function Home() {
   const [realPhotos, setRealPhotos] = useState<RealPhoto[]>([]);
+  const [selectedPhoto, setSelectedPhoto] =
+    useState<RealPhoto | null>(null);
+  const [checkingGuest, setCheckingGuest] = useState(true);
 
   useEffect(() => {
+    const guestName = localStorage.getItem(
+      "bodafake_guest_name"
+    );
+
+    if (!guestName) {
+      window.location.replace("/setup");
+      return;
+    }
+
+    setCheckingGuest(false);
+  }, []);
+
+  useEffect(() => {
+    if (checkingGuest) return;
+
     let mounted = true;
 
     const loadRealPhotos = async () => {
@@ -150,11 +168,20 @@ export default function Home() {
       mounted = false;
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [checkingGuest]);
+
+  if (checkingGuest) {
+    return (
+      <main className="setup-loading">
+        <span>BODАFAKE</span>
+      </main>
+    );
+  }
 
   return (
     <main className="app-shell">
       <PushNotifications />
+
       <video
         className="background-video"
         autoPlay
@@ -165,7 +192,7 @@ export default function Home() {
         aria-hidden="true"
       >
         <source
-          src="/background.mp4"
+          src="/background.MP4"
           type="video/mp4"
         />
       </video>
@@ -227,6 +254,19 @@ export default function Home() {
           <article
             className="polaroid"
             key={`real-${photo.id}`}
+            role="button"
+            tabIndex={0}
+            onClick={() => setSelectedPhoto(photo)}
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter" ||
+                event.key === " "
+              ) {
+                event.preventDefault();
+                setSelectedPhoto(photo);
+              }
+            }}
+            aria-label={`Abrir foto de ${photo.name}`}
           >
             <div className="photo-frame">
               <img
@@ -265,6 +305,47 @@ export default function Home() {
 
         <span>Capturar momento</span>
       </button>
+
+      {selectedPhoto && (
+        <div
+          className="photo-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Foto de ${selectedPhoto.name}`}
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <button
+            type="button"
+            className="photo-lightbox-close"
+            aria-label="Cerrar foto"
+            onClick={() => setSelectedPhoto(null)}
+          >
+            ×
+          </button>
+
+          <div
+            className="photo-lightbox-content"
+            onClick={(event) =>
+              event.stopPropagation()
+            }
+          >
+            <img
+              src={selectedPhoto.image}
+              alt={`Foto compartida por ${selectedPhoto.name}`}
+            />
+
+            <div className="photo-lightbox-info">
+              <strong>
+                {selectedPhoto.name}
+              </strong>
+
+              <span>
+                {selectedPhoto.time}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

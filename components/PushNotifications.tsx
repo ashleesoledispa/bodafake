@@ -6,7 +6,9 @@ import { supabase } from "@/lib/supabase";
 const VAPID_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
-function urlBase64ToUint8Array(base64String: string) {
+function urlBase64ToUint8Array(
+  base64String: string
+) {
   const padding = "=".repeat(
     (4 - (base64String.length % 4)) % 4
   );
@@ -50,124 +52,90 @@ function isStandalone() {
 }
 
 export default function PushNotifications() {
-  const [showIOSInstall, setShowIOSInstall] =
-    useState(false);
-
   const [
     showNotificationPrompt,
     setShowNotificationPrompt,
   ] = useState(false);
 
-  const [notificationsReady, setNotificationsReady] =
-    useState(false);
-
   const [loading, setLoading] =
     useState(false);
 
-  const [testing, setTesting] =
-    useState(false);
+  const saveSubscription = async (
+    subscription: PushSubscription
+  ) => {
+    try {
+      const guestId =
+        localStorage.getItem(
+          "bodafake_guest_id"
+        );
 
-  const [message, setMessage] =
-    useState("");
-
-    const saveSubscription = async (
-  subscription: PushSubscription
-) => {
-  try {
-    const guestId =
-      localStorage.getItem(
-        "bodafake_guest_id"
-      );
-
-    if (!guestId) {
-      setMessage(
-        "No encontramos tu registro de invitado."
-      );
-      return false;
-    }
-
-    const json =
-      subscription.toJSON();
-
-    const endpoint =
-      subscription.endpoint;
-
-    const p256dh =
-      json.keys?.p256dh;
-
-    const auth =
-      json.keys?.auth;
-
-    if (
-      !endpoint ||
-      !p256dh ||
-      !auth
-    ) {
-      setMessage(
-        "No pudimos completar la suscripción."
-      );
-      return false;
-    }
-
-    const response = await fetch(
-      "/api/push/subscribe",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          guestId,
-          endpoint,
-          p256dh,
-          auth,
-        }),
+      if (!guestId) {
+        return false;
       }
-    );
 
-    const result =
-      await response.json();
+      const json = subscription.toJSON();
 
-    if (!response.ok) {
+      const endpoint =
+        subscription.endpoint;
+
+      const p256dh =
+        json.keys?.p256dh;
+
+      const auth =
+        json.keys?.auth;
+
+      if (!endpoint || !p256dh || !auth) {
+        return false;
+      }
+
+      const response = await fetch(
+        "/api/push/subscribe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            guestId,
+            endpoint,
+            p256dh,
+            auth,
+          }),
+        }
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Error guardando suscripción:",
+          result
+        );
+
+        return false;
+      }
+
+      localStorage.setItem(
+        "bodafake_notifications_enabled",
+        "true"
+      );
+
+      return true;
+    } catch (error) {
       console.error(
         "Error guardando suscripción:",
-        result
-      );
-
-      setMessage(
-        result?.error ||
-          "No pudimos guardar las notificaciones."
+        error
       );
 
       return false;
     }
-
-    localStorage.setItem(
-      "bodafake_notifications_enabled",
-      "true"
-    );
-
-    setNotificationsReady(true);
-
-    return true;
-  } catch (error) {
-    console.error(
-      "Error guardando suscripción:",
-      error
-    );
-
-    setMessage(
-      "No pudimos activar las notificaciones."
-    );
-
-    return false;
-  }
-};
+  };
 
   const createSubscription = async () => {
     if (!VAPID_PUBLIC_KEY) {
-      setMessage(
+      console.error(
         "Falta configurar la clave pública VAPID."
       );
       return;
@@ -175,15 +143,11 @@ export default function PushNotifications() {
 
     try {
       setLoading(true);
-      setMessage("");
 
       const permission =
         await Notification.requestPermission();
 
       if (permission !== "granted") {
-        setMessage(
-          "Las notificaciones no fueron activadas."
-        );
         return;
       }
 
@@ -211,18 +175,11 @@ export default function PushNotifications() {
 
       if (saved) {
         setShowNotificationPrompt(false);
-        setMessage(
-          "Notificaciones activadas."
-        );
       }
     } catch (error) {
       console.error(
         "Error activando notificaciones:",
         error
-      );
-
-      setMessage(
-        "No pudimos activar las notificaciones."
       );
     } finally {
       setLoading(false);
@@ -243,16 +200,15 @@ export default function PushNotifications() {
       const ios = isIOS();
       const standalone = isStandalone();
 
+      /*
+       * El registro de iPhone ya se maneja
+       * desde /setup antes de llegar aquí.
+       *
+       * Si el usuario ya está dentro de la
+       * versión instalada, solamente mostramos
+       * la solicitud de notificaciones.
+       */
       if (ios && !standalone) {
-        const dismissed =
-          localStorage.getItem(
-            "bodafake_ios_install_seen"
-          );
-
-        if (!dismissed) {
-          setShowIOSInstall(true);
-        }
-
         return;
       }
 
@@ -281,217 +237,54 @@ export default function PushNotifications() {
             subscription
           );
         }
-
-        setNotificationsReady(true);
       }
     };
 
     initialize();
   }, []);
 
-  const testNotification = async () => {
-    try {
-      setTesting(true);
-      setMessage("");
-
-      const guestId =
-        localStorage.getItem(
-          "bodafake_guest_id"
-        );
-
-      if (!guestId) {
-        setMessage(
-          "No encontramos tu invitado."
-        );
-        return;
-      }
-
-      const response =
-        await fetch("/api/push/test", {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            guestId,
-          }),
-        });
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-        console.error(
-  "Error de prueba:",
-  JSON.stringify(data, null, 2)
-);
-        setMessage(
-          data?.error ||
-            "No se pudo enviar la prueba."
-        );
-
-        return;
-      }
-
-      setMessage(
-        "Notificación de prueba enviada."
-      );
-    } catch (error) {
-      console.error(
-        "Error probando notificación:",
-        error
-      );
-
-      setMessage(
-        "No se pudo enviar la notificación."
-      );
-    } finally {
-      setTesting(false);
-    }
-  };
-
-  const closeIOSInstall = () => {
-    localStorage.setItem(
-      "bodafake_ios_install_seen",
-      "true"
-    );
-
-    setShowIOSInstall(false);
-  };
-
-  if (showIOSInstall) {
-    return (
-      <div className="push-modal-backdrop">
-        <div className="push-modal">
-          <p className="push-modal-eyebrow">
-            BODАFAKE
-          </p>
-
-          <h2>
-            Activa los avisos de la boda
-          </h2>
-
-          <p>
-            Para recibir los momentos en tu
-            iPhone, primero agrega BodaFake a tu
-            pantalla de inicio.
-          </p>
-
-          <div className="push-steps">
-            <div>
-              <strong>1</strong>
-              <span>
-                Abre el menú de compartir de
-                Safari.
-              </span>
-            </div>
-
-            <div>
-              <strong>2</strong>
-              <span>
-                Toca “Agregar a pantalla de
-                inicio”.
-              </span>
-            </div>
-
-            <div>
-              <strong>3</strong>
-              <span>
-                Abre BodaFake desde el nuevo
-                ícono.
-              </span>
-            </div>
-
-            <div>
-              <strong>4</strong>
-              <span>
-                Ahí podrás activar las
-                notificaciones.
-              </span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="push-primary-button"
-            onClick={closeIOSInstall}
-          >
-            Entendido
-          </button>
-        </div>
-      </div>
-    );
+  if (!showNotificationPrompt) {
+    return null;
   }
 
-  if (showNotificationPrompt) {
-    return (
-      <div className="push-modal-backdrop">
-        <div className="push-modal">
-          <p className="push-modal-eyebrow">
-            BODАFAKE
-          </p>
+  return (
+    <div className="push-modal-backdrop">
+      <div className="push-modal">
+        <p className="push-modal-eyebrow">
+          BODАFAKE
+        </p>
 
-          <h2>
-            No te pierdas ningún momento
-          </h2>
+        <h2>
+          No te pierdas ningún momento
+        </h2>
 
-          <p>
-            Te avisaremos cuando llegue un nuevo
-            momento de la boda para que puedas
-            capturarlo.
-          </p>
+        <p>
+          Te avisaremos cuando llegue un
+          nuevo momento de la boda para que
+          puedas capturarlo.
+        </p>
 
-          <button
-            type="button"
-            className="push-primary-button"
-            onClick={
-              createSubscription
-            }
-            disabled={loading}
-          >
-            {loading
-              ? "Activando..."
-              : "Activar notificaciones"}
-          </button>
-
-          <button
-            type="button"
-            className="push-secondary-button"
-            onClick={() =>
-              setShowNotificationPrompt(
-                false
-              )
-            }
-          >
-            Ahora no
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (notificationsReady) {
-    return (
-      <div className="push-status">
         <button
           type="button"
-          onClick={
-            testNotification
-          }
-          disabled={testing}
+          className="push-primary-button"
+          onClick={createSubscription}
+          disabled={loading}
         >
-          {testing
-            ? "Enviando..."
-            : "Probar notificación"}
+          {loading
+            ? "Activando..."
+            : "Activar notificaciones"}
         </button>
 
-        {message && (
-          <span>{message}</span>
-        )}
+        <button
+          type="button"
+          className="push-secondary-button"
+          onClick={() =>
+            setShowNotificationPrompt(false)
+          }
+        >
+          Ahora no
+        </button>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }

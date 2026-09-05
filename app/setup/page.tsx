@@ -7,6 +7,10 @@ import { supabase } from "@/lib/supabase";
 const EVENT_SLUG = "bodafake";
 
 const MOMENTS = [
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
   "22:00",
   "22:30",
   "23:00",
@@ -26,36 +30,36 @@ export default function SetupPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
+  const [isStandalone, setIsStandalone] =
+    useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const savedName = localStorage.getItem("bodafake_guest_name");
+    const savedName = localStorage.getItem(
+      "bodafake_guest_name"
+    );
 
     if (savedName) {
       router.replace("/");
       return;
     }
 
-    const userAgent = navigator.userAgent;
-
-    const iphone =
-      /iPhone|iPad|iPod/i.test(userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
     const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (navigator as Navigator & { standalone?: boolean }).standalone === true;
+      window.matchMedia(
+        "(display-mode: standalone)"
+      ).matches ||
+      (navigator as Navigator & {
+        standalone?: boolean;
+      }).standalone === true;
 
-    setIsIOS(iphone);
     setIsStandalone(standalone);
   }, [router]);
 
   const detectDevice = (): DeviceType => {
-    const userAgent = navigator.userAgent.toLowerCase();
+    const userAgent =
+      navigator.userAgent.toLowerCase();
 
     if (/iphone|ipad|ipod/.test(userAgent)) {
       return "iphone";
@@ -77,15 +81,18 @@ export default function SetupPage() {
     setError("");
 
     try {
-      // Buscar la boda
-      const { data: events, error: eventError } = await supabase
-        .from("events")
-        .select("id")
-        .eq("slug", EVENT_SLUG)
-        .limit(1);
+      const { data: events, error: eventError } =
+        await supabase
+          .from("events")
+          .select("id")
+          .eq("slug", EVENT_SLUG)
+          .limit(1);
 
       if (eventError) {
-        console.error("EVENT ERROR:", eventError);
+        console.error(
+          "EVENT ERROR:",
+          eventError
+        );
 
         throw new Error(
           `Error buscando la boda: ${eventError.message}`
@@ -100,14 +107,15 @@ export default function SetupPage() {
         );
       }
 
-      // Detectar dispositivo
       const deviceType = detectDevice();
 
-      // Hora exacta de registro
-      const registeredAt = new Date().toISOString();
+      const registeredAt =
+        new Date().toISOString();
 
-      // Crear invitado
-      const { data: guest, error: guestError } = await supabase
+      const {
+        data: guest,
+        error: guestError,
+      } = await supabase
         .from("guests")
         .insert({
           event_id: event.id,
@@ -115,11 +123,16 @@ export default function SetupPage() {
           registered_at: registeredAt,
           device_type: deviceType,
         })
-        .select("id, name, registered_at, device_type")
+        .select(
+          "id, name, registered_at, device_type"
+        )
         .single();
 
       if (guestError) {
-        console.error("GUEST INSERT ERROR:", guestError);
+        console.error(
+          "GUEST INSERT ERROR:",
+          guestError
+        );
 
         throw new Error(
           `Error registrando invitado: ${guestError.message}`
@@ -132,24 +145,35 @@ export default function SetupPage() {
         );
       }
 
-      // Guardar identidad del invitado en el dispositivo
-      localStorage.setItem("bodafake_guest_id", guest.id);
-      localStorage.setItem("bodafake_guest_name", guest.name);
+      localStorage.setItem(
+        "bodafake_guest_id",
+        guest.id
+      );
+
+      localStorage.setItem(
+        "bodafake_guest_name",
+        guest.name
+      );
+
       localStorage.setItem(
         "bodafake_registered_at",
         guest.registered_at
       );
+
       localStorage.setItem(
         "bodafake_device",
         deviceType
       );
+
       localStorage.setItem(
         "bodafake_notification_moments",
         JSON.stringify(MOMENTS)
       );
 
-      // iPhone necesita primero instalar la web
-      if (deviceType === "iphone" && !isStandalone) {
+      if (
+        deviceType === "iphone" &&
+        !isStandalone
+      ) {
         setStep(2);
         setLoading(false);
         return;
@@ -157,7 +181,10 @@ export default function SetupPage() {
 
       await enableNotifications();
     } catch (err) {
-      console.error("BODAFAKE SETUP ERROR:", err);
+      console.error(
+        "BODAFAKE SETUP ERROR:",
+        err
+      );
 
       setError(
         err instanceof Error
@@ -175,7 +202,10 @@ export default function SetupPage() {
         await Notification.requestPermission();
       }
     } catch (err) {
-      console.error("NOTIFICATION ERROR:", err);
+      console.error(
+        "NOTIFICATION ERROR:",
+        err
+      );
     }
 
     router.push("/camera");
@@ -197,8 +227,8 @@ export default function SetupPage() {
             </h1>
 
             <p className="setup-description">
-              Tu nombre aparecerá junto a las fotos que compartas
-              durante la boda.
+              Tu nombre aparecerá junto a las fotos
+              que compartas durante la boda.
             </p>
 
             <div className="setup-form">
@@ -235,12 +265,21 @@ export default function SetupPage() {
                 type="button"
                 className="setup-button"
                 onClick={registerGuest}
-                disabled={!name.trim() || loading}
+                disabled={
+                  !name.trim() || loading
+                }
               >
                 {loading
                   ? "Entrando..."
                   : "Entrar a la boda"}
               </button>
+            </div>
+
+            <div className="setup-brand">
+              <img
+                src="/bodafake-by-vertigo-white.png"
+                alt="BodaFake by Vértigo"
+              />
             </div>
           </>
         )}
@@ -258,26 +297,31 @@ export default function SetupPage() {
             </h1>
 
             <p className="setup-description">
-              En iPhone necesitamos que BodaFake esté en tu
-              pantalla de inicio para poder enviarte los
-              momentos de la boda.
+              En iPhone necesitamos que BodaFake esté
+              en tu pantalla de inicio para poder
+              enviarte los momentos de la boda.
             </p>
 
             <div className="ios-instructions">
               <div className="ios-step">
                 <span>01</span>
+
                 <p>
-                  Toca el botón{" "}
-                  <strong>Compartir</strong> de Safari.
+                  Presiona los{" "}
+                  <strong>
+                    tres puntitos
+                  </strong>{" "}
+                  al lado de la URL.
                 </p>
               </div>
 
               <div className="ios-step">
                 <span>02</span>
+
                 <p>
                   Selecciona{" "}
                   <strong>
-                    “Añadir a pantalla de inicio”
+                    “Añadir a inicio”
                   </strong>
                   .
                 </p>
@@ -285,17 +329,23 @@ export default function SetupPage() {
 
               <div className="ios-step">
                 <span>03</span>
+
                 <p>
-                  Abre <strong>BodaFake</strong> desde tu
-                  pantalla de inicio.
+                  Abre{" "}
+                  <strong>BodaFake</strong>{" "}
+                  desde tu pantalla de inicio.
                 </p>
               </div>
 
               <div className="ios-step">
                 <span>04</span>
+
                 <p>
-                  Permite las{" "}
-                  <strong>notificaciones</strong>.
+                  Ahora sí, permite las{" "}
+                  <strong>
+                    notificaciones
+                  </strong>
+                  .
                 </p>
               </div>
             </div>
@@ -311,7 +361,9 @@ export default function SetupPage() {
             <button
               type="button"
               className="setup-skip"
-              onClick={() => router.push("/camera")}
+              onClick={() =>
+                router.push("/camera")
+              }
             >
               Continuar sin activar ahora
             </button>
