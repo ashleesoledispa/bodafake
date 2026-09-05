@@ -219,15 +219,6 @@ export default function Home() {
           />
         </div>
 
-        <button
-          className="menu-button"
-          type="button"
-          aria-label="Abrir menú"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
       </header>
 
       <section className="event-heading">
