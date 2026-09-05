@@ -212,8 +212,15 @@ export default function SetupPage() {
   };
 
   return (
-    <main className="setup-page">
-      <div className="setup-card">
+  <main className="setup-page">
+    <div className="setup-brand">
+      <img
+        src="/bodafake-by-vertigo-white.png"
+        alt="BodaFake by Vértigo"
+      />
+    </div>
+
+    <div className="setup-card">
         {step === 1 && (
           <>
             <p className="setup-eyebrow">
@@ -273,13 +280,6 @@ export default function SetupPage() {
                   ? "Entrando..."
                   : "Entrar a la boda"}
               </button>
-            </div>
-
-            <div className="setup-brand">
-              <img
-                src="/bodafake-by-vertigo-white.png"
-                alt="BodaFake by Vértigo"
-              />
             </div>
           </>
         )}
