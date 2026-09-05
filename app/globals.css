@@ -1,26 +1,1371 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #080808;
+  --navbar: #ffffff;
+  --paper: #f0eee8;
+  --paper-shadow: rgba(0, 0, 0, 0.38);
+  --text: #f5f3ee;
+  --muted: #8f8d88;
+  --dark-text: #111111;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  min-height: 100%;
+  background: #000;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background: transparent;
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+button {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-shell {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding-bottom: 120px;
+}
+
+/* =========================================
+   BACKGROUND VIDEO
+========================================= */
+
+.background-video {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  object-fit: cover;
+
+  z-index: -2;
+
+  pointer-events: none;
+}
+
+.background-overlay {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.35);
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  width: 100%;
+  height: 94px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 42px;
+
+  background: #ffffff;
+}
+
+/* =========================================
+   BRAND LOCKUP
+========================================= */
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 17px;
+
+  height: 100%;
+}
+
+.bodafake-logo {
+  display: block;
+
+  width: auto;
+  height: 58px;
+
+  max-width: 300px;
+
+  object-fit: contain;
+}
+
+.brand-by {
+  color: #111111;
+
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+
+  letter-spacing: -0.02em;
+}
+
+.vertigo-logo {
+  display: block;
+
+  width: auto;
+  height: 59px;
+
+  max-width: 150px;
+
+  object-fit: contain;
+}
+
+/* =========================================
+   MENU
+========================================= */
+
+.menu-button {
+  position: absolute;
+  right: 38px;
+  top: 50%;
+
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.menu-button span {
+  display: block;
+
+  width: 24px;
+  height: 2px;
+
+  border-radius: 20px;
+
+  background: #080808;
+
+  transition:
+    width 180ms ease,
+    opacity 180ms ease;
+}
+
+.menu-button:hover {
+  background: #f0eee8;
+
+  transform: translateY(-50%) scale(1.04);
+}
+
+/* =========================================
+   INTRO
+========================================= */
+
+.event-heading {
+  width: min(1280px, calc(100% - 84px));
+
+  margin: 0 auto;
+
+  padding: 82px 0 52px;
+}
+
+.eyebrow {
+  margin-bottom: 19px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.23em;
+  line-height: 1.2;
+
+  text-transform: uppercase;
+}
+
+.event-heading h1 {
+  color: var(--text);
+
+  font-size: clamp(48px, 6.2vw, 88px);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.89;
+}
+
+.heading-description {
+  max-width: 400px;
+
+  margin-top: 27px;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* =========================================
+   PHOTO WALL
+========================================= */
+
+.photo-wall {
+  width: min(1280px, calc(100% - 84px));
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 30px 28px;
+
+  align-items: start;
+}
+
+/* =========================================
+   POLAROID
+========================================= */
+
+.polaroid {
+  position: relative;
+
+  width: 100%;
+
+  padding: 12px 12px 22px;
+
+  background: var(--paper);
+
+  color: var(--dark-text);
+
+  box-shadow:
+    0 22px 50px var(--paper-shadow),
+    0 4px 10px rgba(0, 0, 0, 0.22);
+
+  transform: rotate(0deg);
+
+  transition:
+    transform 280ms ease,
+    box-shadow 280ms ease;
+}
+
+.polaroid:nth-child(2n) {
+  transform: rotate(0.45deg);
+}
+
+.polaroid:nth-child(3n) {
+  transform: rotate(-0.35deg);
+}
+
+.polaroid:nth-child(5n) {
+  transform: rotate(0.7deg);
+}
+
+.polaroid:hover {
+  z-index: 2;
+
+  transform: translateY(-7px) rotate(0deg);
+
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.48),
+    0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================
+   PHOTO
+========================================= */
+
+.photo-frame {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  background: #d8d5ce;
+}
+
+.photo-frame img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 500ms ease;
+}
+
+.polaroid:hover .photo-frame img {
+  transform: scale(1.025);
+}
+
+/* =========================================
+   POLAROID INFO
+========================================= */
+
+.polaroid-info {
+  padding: 14px 3px 0;
+}
+
+.photo-name {
+  color: #151515;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.photo-time {
+  margin-top: 4px;
+
+  color: #77746e;
+
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* =========================================
+   CAPTURE BUTTON
+========================================= */
+
+.capture-button {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 90;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 52px;
+
+  padding: 0 20px 0 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 100px;
+
+  background: #f3f1eb;
+  color: #101010;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    0 3px 8px rgba(0, 0, 0, 0.25);
+
+  transition:
+    transform 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.capture-button:hover {
+  background: #ffffff;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 20px 42px rgba(0, 0, 0, 0.48),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.capture-button:active {
+  transform: translateY(-1px);
+}
+
+.capture-icon {
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1.5px solid #151515;
+  border-radius: 50%;
+}
+
+.capture-icon span {
+  width: 9px;
+  height: 9px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: #151515;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+  .topbar {
+    height: 86px;
+
+    padding: 0 28px;
+  }
+
+  .brand-lockup {
+    gap: 13px;
+  }
+
+  .bodafake-logo {
+    height: 51px;
+    max-width: 250px;
+  }
+
+  .brand-by {
+    font-size: 13px;
+  }
+
+  .vertigo-logo {
+    height: 51px;
+    max-width: 130px;
+  }
+
+  .menu-button {
+    right: 22px;
+  }
+
+  .event-heading,
+  .photo-wall {
+    width: calc(100% - 56px);
+  }
+
+  .photo-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .app-shell {
+    padding-bottom: 100px;
+  }
+
+  .topbar {
+    height: 76px;
+
+    padding: 0 58px 0 17px;
+  }
+
+  .brand-lockup {
+    gap: 9px;
+
+    width: 100%;
+  }
+
+  .bodafake-logo {
+    height: 39px;
+
+    max-width: 165px;
+  }
+
+  .brand-by {
+    font-size: 10px;
+  }
+
+  .vertigo-logo {
+    height: 39px;
+
+    max-width: 88px;
+  }
+
+  .menu-button {
+    right: 13px;
+
+    width: 42px;
+    height: 42px;
+
+    gap: 4px;
+  }
+
+  .menu-button span {
+    width: 19px;
+  }
+
+  .event-heading {
+    width: calc(100% - 34px);
+
+    padding: 49px 0 32px;
+  }
+
+  .eyebrow {
+    margin-bottom: 15px;
+
+    font-size: 8px;
+
+    letter-spacing: 0.19em;
+  }
+
+  .event-heading h1 {
+    font-size: clamp(45px, 14vw, 68px);
+
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+  }
+
+  .heading-description {
+    max-width: 280px;
+
+    margin-top: 20px;
+
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .photo-prompt {
+  max-width: 330px;
+
+  margin-top: 24px;
+
+  font-size: clamp(28px, 8.5vw, 42px);
+  line-height: 0.98;
+}
+
+  .photo-wall {
+    width: calc(100% - 34px);
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+  }
+
+  .polaroid {
+    padding: 7px 7px 12px;
+  }
+
+  .polaroid:nth-child(2n) {
+    transform: rotate(0.35deg);
+  }
+
+  .polaroid:nth-child(3n) {
+    transform: rotate(-0.25deg);
+  }
+
+  .polaroid:nth-child(5n) {
+    transform: rotate(0.4deg);
+  }
+
+  .polaroid-info {
+    padding: 10px 2px 0;
+  }
+
+  .photo-name {
+    font-size: 9.5px;
+  }
+
+  .photo-time {
+    margin-top: 3px;
+
+    font-size: 7.5px;
+  }
+
+  .capture-button {
+    right: 16px;
+    bottom: 16px;
+
+    min-height: 48px;
+
+    padding: 0 16px 0 11px;
+
+    font-size: 10px;
+  }
+
+  .capture-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .capture-icon span {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 370px) {
+  .topbar {
+    height: 70px;
+
+    padding: 0 49px 0 11px;
+  }
+
+  .brand-lockup {
+    gap: 6px;
+  }
+
+  .bodafake-logo {
+    height: 34px;
+    max-width: 140px;
+  }
+
+  .brand-by {
+    font-size: 8px;
+  }
+
+  .vertigo-logo {
+    height: 34px;
+    max-width: 72px;
+  }
+
+  .menu-button {
+    right: 8px;
+
+    width: 38px;
+    height: 38px;
+  }
+
+  .menu-button span {
+    width: 17px;
+  }
+
+  .event-heading {
+    width: calc(100% - 26px);
+
+    padding-top: 42px;
+  }
+
+  .photo-wall {
+    width: calc(100% - 26px);
+
+    gap: 10px;
+  }
+
+  .polaroid {
+    padding: 6px 6px 10px;
+  }
+
+  .polaroid-info {
+    padding-top: 8px;
+  }
+
+  .photo-name {
+    font-size: 8.5px;
+  }
+
+  .photo-time {
+    font-size: 7px;
+  }
+
+  .capture-button {
+    right: 14px;
+    bottom: 14px;
+
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+
+    padding: 0;
+
+    justify-content: center;
+  }
+
+  .capture-button > span:last-child {
+    display: none;
+  }
+}
+
+.photo-prompt {
+  max-width: 850px;
+
+  margin-top: 34px;
+
+  color: var(--text);
+
+  font-size: clamp(32px, 4.2vw, 58px);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+/* =========================================================
+   SETUP
+========================================================= */
+
+.setup-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: #080808;
+  color: #fff;
+}
+
+.setup-card {
+  width: min(560px, 100%);
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #080808;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.setup-eyebrow {
+  margin: 0 0 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.setup-card h1 {
+  margin: 0;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  font-weight: 500;
+}
+
+.setup-description {
+  max-width: 430px;
+  margin: 26px 0 38px;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.setup-form label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.setup-form input {
+  width: 100%;
+  height: 58px;
+  padding: 0 18px;
+  border: 1px solid #cfcfcf;
+  background: #fff;
+  color: #080808;
+  font-family: inherit;
+  font-size: 17px;
+  outline: none;
+}
+
+.setup-form input:focus {
+  border-color: #080808;
+}
+
+.setup-button {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 16px;
+  border: 0;
+  background: #080808;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.setup-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.setup-skip {
+  width: 100%;
+  margin-top: 16px;
+  border: 0;
+  background: transparent;
+  color: #555;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ios-instructions {
+  margin: 32px 0;
+  border-top: 1px solid #ddd;
+}
+
+.ios-step {
+  display: flex;
+  gap: 20px;
+  padding: 19px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.ios-step span {
+  min-width: 25px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.ios-step p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+.camera-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: #fff;
+}
+
+.camera-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.camera-back,
+.camera-name {
+  border: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.camera-back {
+  background: rgba(0, 0, 0, 0.45);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.camera-name {
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.camera-view {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.camera-view video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-mirror {
+  transform: scaleX(-1);
+}
+
+.camera-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(400px, calc(100% - 48px));
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.camera-error h1 {
+  margin: 0 0 12px;
+  font-size: 30px;
+  letter-spacing: -0.04em;
+}
+
+.camera-error p {
+  margin: 0;
+  color: #bbb;
+  line-height: 1.5;
+}
+
+.camera-controls {
+  position: absolute;
+  z-index: 10;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.shutter {
+  width: 78px;
+  height: 78px;
+  padding: 5px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.shutter span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.camera-switch {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.camera-placeholder {
+  width: 48px;
+}
+
+.hidden-canvas {
+  display: none;
+}
+
+.photo-preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.preview-actions {
+  position: absolute;
+  z-index: 10;
+  bottom: 35px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.preview-actions button {
+  flex: 1;
+  min-height: 56px;
+  border: 0;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.preview-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #080808;
+}
+
+.preview-primary {
+  background: #fff;
+  color: #080808;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .setup-page {
+    padding: 18px;
+    align-items: flex-end;
+  }
+
+  .setup-card {
+    padding: 30px 24px;
+  }
+
+  .setup-card h1 {
+    font-size: 43px;
+  }
+
+  .setup-description {
+    font-size: 15px;
+    margin: 22px 0 30px;
+  }
+
+  .camera-header {
+    padding: 18px;
+  }
+
+  .camera-controls {
+    bottom: 28px;
+    gap: 38px;
+  }
+
+  .shutter {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+.setup-error {
+  margin: 12px 0 0;
+  color: #c00000;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   PHOTO WALL REAL
+========================================================= */
+
+.wall-loading,
+.wall-empty {
+  grid-column: 1 / -1;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 40px;
+}
+
+.wall-loading {
+  font-size: 15px;
+}
+
+.wall-empty p {
+  margin: 0;
+  font-size: clamp(25px, 4vw, 45px);
+  letter-spacing: -0.04em;
+}
+
+.wall-empty span {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 14px;
+}
+
+.polaroid-0 {
+  transform: rotate(-1.5deg);
+}
+
+.polaroid-1 {
+  transform: rotate(1.2deg);
+}
+
+.polaroid-2 {
+  transform: rotate(-0.8deg);
+}
+
+.polaroid-3 {
+  transform: rotate(1.8deg);
+}
+
+.polaroid:hover {
+  transform: rotate(0deg) translateY(-6px);
+  z-index: 5;
+}
+
+
+/* =========================================================
+   CAMERA ERROR
+========================================================= */
+
+.camera-error-button {
+  margin-top: 24px;
+  padding: 14px 20px;
+  border: 0;
+  background: #fff;
+  color: #000;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.preview-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BACKGROUND VIDEO
+========================================================= */
+
+.background-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.background-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.background-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.background-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.topbar,
+.event-heading,
+.photo-wall {
+  position: relative;
+  z-index: 2;
+}
+
+.topbar {
+  z-index: 100 !important;
+}
+
+.capture-button {
+  position: fixed !important;
+  z-index: 200 !important;
+}
+.topbar {
+  z-index: 100 !important;
+}
+
+.push-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.push-modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px 24px 24px;
+  background: #fff;
+  color: #000;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.push-modal-eyebrow {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.push-modal h2 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+.push-modal > p:not(.push-modal-eyebrow) {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.push-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.push-steps > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.push-steps strong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  font-size: 13px;
+}
+
+.push-steps span {
+  padding-top: 4px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.push-primary-button {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.push-primary-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.push-secondary-button {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: #000;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.push-status {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1000;
+  transform: translateX(-50%);
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.push-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.push-status button {
+  border: 1px solid #000;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.push-status button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+

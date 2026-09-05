@@ -1,69 +1,270 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import PushNotifications from "@/components/PushNotifications";
+
+type RealPhoto = {
+  id: string;
+  name: string;
+  time: string;
+  image: string;
+};
+
+const EVENT_SLUG = "bodafake";
+
+function formatRelativeTime(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const seconds = Math.floor(
+    (now.getTime() - date.getTime()) / 1000
+  );
+
+  if (seconds < 60) {
+    return "ahora mismo";
+  }
+
+  const minutes = Math.floor(seconds / 60);
+
+  if (minutes < 60) {
+    return `hace ${minutes} ${
+      minutes === 1 ? "minuto" : "minutos"
+    }`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `hace ${hours} ${
+      hours === 1 ? "hora" : "horas"
+    }`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  return `hace ${days} ${
+    days === 1 ? "día" : "días"
+  }`;
+}
 
 export default function Home() {
+  const [realPhotos, setRealPhotos] = useState<RealPhoto[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadRealPhotos = async () => {
+      try {
+        const { data: events, error: eventError } =
+          await supabase
+            .from("events")
+            .select("id")
+            .eq("slug", EVENT_SLUG)
+            .limit(1);
+
+        if (eventError) {
+          console.error(
+            "Error buscando evento:",
+            eventError
+          );
+          return;
+        }
+
+        const event = events?.[0];
+
+        if (!event) {
+          console.error(
+            "No existe el evento BodaFake."
+          );
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("photos")
+          .select(`
+            id,
+            image_url,
+            created_at,
+            guests (
+              name
+            )
+          `)
+          .eq("event_id", event.id)
+          .eq("is_visible", true)
+          .order("created_at", {
+            ascending: false,
+          });
+
+        if (error) {
+          console.error(
+            "Error cargando fotos:",
+            error
+          );
+          return;
+        }
+
+        if (!mounted) return;
+
+        const formattedPhotos: RealPhoto[] =
+          (data || []).map((item) => {
+            const guest = Array.isArray(item.guests)
+              ? item.guests[0]
+              : item.guests;
+
+            return {
+              id: item.id,
+              name: guest?.name || "Invitado",
+              time: formatRelativeTime(item.created_at),
+              image: item.image_url,
+            };
+          });
+
+        setRealPhotos(formattedPhotos);
+      } catch (error) {
+        console.error(
+          "Error del mural:",
+          error
+        );
+      }
+    };
+
+    loadRealPhotos();
+
+    const channel = supabase
+      .channel("bodafake-photo-wall")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "photos",
+        },
+        () => {
+          loadRealPhotos();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      mounted = false;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="app-shell">
+      <PushNotifications />
+      <video
+        className="background-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source
+          src="/background.mp4"
+          type="video/mp4"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      </video>
+
+      <div
+        className="background-overlay"
+        aria-hidden="true"
+      />
+
+      <header className="topbar">
+        <div className="brand-lockup">
+          <img
+            className="bodafake-logo"
+            src="/bodafake-logo.png"
+            alt="BodaFake"
+          />
+
+          <span className="brand-by">by</span>
+
+          <img
+            className="vertigo-logo"
+            src="/vertigo-logo.png"
+            alt="Vértigo"
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <button
+          className="menu-button"
+          type="button"
+          aria-label="Abrir menú"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </header>
+
+      <section className="event-heading">
+        <p className="eyebrow">
+          HASTA QUE LA FIESTA NOS SEPARE
+        </p>
+
+        <h1>
+          Nuestro propio BeReal⚠️
+          <br />
+          de la BodaFake.
+        </h1>
+
+        <h2 className="photo-prompt">
+          Comparte tu mejor foto o tu mejor borrachera
+        </h2>
+      </section>
+
+      <section
+        className="photo-wall"
+        aria-label="Mural de fotos"
+      >
+        {realPhotos.map((photo) => (
+          <article
+            className="polaroid"
+            key={`real-${photo.id}`}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <div className="photo-frame">
+              <img
+                src={photo.image}
+                alt={`Foto compartida por ${photo.name}`}
+                loading="lazy"
+              />
+            </div>
+
+            <div className="polaroid-info">
+              <p className="photo-name">
+                {photo.name}
+              </p>
+
+              <p className="photo-time">
+                {photo.time}
+              </p>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <button
+        className="capture-button"
+        type="button"
+        onClick={() => {
+          window.location.href = "/camera";
+        }}
+      >
+        <span
+          className="capture-icon"
+          aria-hidden="true"
+        >
+          <span />
+        </span>
+
+        <span>Capturar momento</span>
+      </button>
+    </main>
   );
 }
