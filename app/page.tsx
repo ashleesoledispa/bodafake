@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import PushNotifications from "@/components/PushNotifications";
 
@@ -49,11 +49,69 @@ function formatRelativeTime(dateString: string) {
 }
 
 export default function Home() {
-  const [realPhotos, setRealPhotos] = useState<RealPhoto[]>([]);
+  const backgroundVideoRef =
+    useRef<HTMLVideoElement>(null);
+
+  const [realPhotos, setRealPhotos] =
+    useState<RealPhoto[]>([]);
+
   const [selectedPhoto, setSelectedPhoto] =
     useState<RealPhoto | null>(null);
-  const [checkingGuest, setCheckingGuest] = useState(true);
 
+  const [checkingGuest, setCheckingGuest] =
+    useState(true);
+
+  // Forzar reproducción automática del video
+  useEffect(() => {
+    const video = backgroundVideoRef.current;
+
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const forcePlay = async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.error(
+          "BACKGROUND VIDEO AUTOPLAY ERROR:",
+          error
+        );
+      }
+    };
+
+    if (video.readyState >= 2) {
+      forcePlay();
+    } else {
+      video.addEventListener(
+        "loadeddata",
+        forcePlay,
+        { once: true }
+      );
+
+      video.addEventListener(
+        "canplay",
+        forcePlay,
+        { once: true }
+      );
+    }
+
+    return () => {
+      video.removeEventListener(
+        "loadeddata",
+        forcePlay
+      );
+
+      video.removeEventListener(
+        "canplay",
+        forcePlay
+      );
+    };
+  }, []);
+
+  // Revisar si el invitado ya está registrado
   useEffect(() => {
     const guestName = localStorage.getItem(
       "bodafake_guest_name"
@@ -67,6 +125,7 @@ export default function Home() {
     setCheckingGuest(false);
   }, []);
 
+  // Cargar fotos y escuchar nuevas publicaciones
   useEffect(() => {
     if (checkingGuest) return;
 
@@ -74,12 +133,14 @@ export default function Home() {
 
     const loadRealPhotos = async () => {
       try {
-        const { data: events, error: eventError } =
-          await supabase
-            .from("events")
-            .select("id")
-            .eq("slug", EVENT_SLUG)
-            .limit(1);
+        const {
+          data: events,
+          error: eventError,
+        } = await supabase
+          .from("events")
+          .select("id")
+          .eq("slug", EVENT_SLUG)
+          .limit(1);
 
         if (eventError) {
           console.error(
@@ -133,7 +194,9 @@ export default function Home() {
             return {
               id: item.id,
               name: guest?.name || "Invitado",
-              time: formatRelativeTime(item.created_at),
+              time: formatRelativeTime(
+                item.created_at
+              ),
               image: item.image_url,
             };
           });
@@ -183,24 +246,17 @@ export default function Home() {
       <PushNotifications />
 
       <video
-  className="background-video"
-  autoPlay
-  muted
-  loop
-  playsInline
-  preload="auto"
-  aria-hidden="true"
-  ref={(video) => {
-    if (video) {
-      video.muted = true;
-      video.play().catch(() => {
-        // Algunos navegadores pueden bloquear autoplay.
-      });
-    }
-  }}
->
+        ref={backgroundVideoRef}
+        className="background-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
         <source
-          src="/background.MP4"
+          src="/background.mp4"
           type="video/mp4"
         />
       </video>
@@ -226,7 +282,6 @@ export default function Home() {
             alt="Vértigo"
           />
         </div>
-
       </header>
 
       <section className="event-heading">
@@ -255,7 +310,9 @@ export default function Home() {
             key={`real-${photo.id}`}
             role="button"
             tabIndex={0}
-            onClick={() => setSelectedPhoto(photo)}
+            onClick={() =>
+              setSelectedPhoto(photo)
+            }
             onKeyDown={(event) => {
               if (
                 event.key === "Enter" ||
@@ -311,13 +368,17 @@ export default function Home() {
           role="dialog"
           aria-modal="true"
           aria-label={`Foto de ${selectedPhoto.name}`}
-          onClick={() => setSelectedPhoto(null)}
+          onClick={() =>
+            setSelectedPhoto(null)
+          }
         >
           <button
             type="button"
             className="photo-lightbox-close"
             aria-label="Cerrar foto"
-            onClick={() => setSelectedPhoto(null)}
+            onClick={() =>
+              setSelectedPhoto(null)
+            }
           >
             ×
           </button>
