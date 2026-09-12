@@ -183,14 +183,22 @@ export default function Home() {
       <PushNotifications />
 
       <video
-        className="background-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      >
+  className="background-video"
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="auto"
+  aria-hidden="true"
+  ref={(video) => {
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {
+        // Algunos navegadores pueden bloquear autoplay.
+      });
+    }
+  }}
+>
         <source
           src="/background.MP4"
           type="video/mp4"
