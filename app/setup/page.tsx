@@ -217,9 +217,9 @@ export default function SetupPage() {
     <main className="setup-page">
       <div className="setup-brand">
         <img
-          src="/icon-512.png"
-          alt="Ibiza Night"
-        />
+  src="/logos.png"
+  alt="Ibiza Night"
+/>
       </div>
 
       <div className="setup-card">
