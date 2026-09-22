@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "BodaFake",
-    short_name: "BodaFake",
-    description: "Nuestro propio BeReal de la BodaFake.",
+    name: "Ibiza Night",
+    short_name: "Ibiza Night",
+    description: "Viaja en una noche.",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#ffffff",
+    background_color: "#000000",
+    theme_color: "#000000",
     orientation: "portrait",
     icons: [
       {

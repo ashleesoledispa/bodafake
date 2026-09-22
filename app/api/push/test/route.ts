@@ -8,19 +8,21 @@ const supabaseAdmin = createClient(
 );
 
 webpush.setVapidDetails(
-  "mailto:bodafake@example.com",
+  "mailto:ibizanight@example.com",
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
   process.env.VAPID_PRIVATE_KEY!
 );
 
 export async function POST() {
   try {
-    const { data: subscriptions, error } =
-      await supabaseAdmin
-        .from("push_subscriptions")
-        .select(
-          "id, endpoint, p256dh, auth"
-        );
+    const {
+      data: subscriptions,
+      error,
+    } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select(
+        "id, endpoint, p256dh, auth"
+      );
 
     if (error) {
       return NextResponse.json(
@@ -44,8 +46,9 @@ export async function POST() {
     }
 
     const payload = JSON.stringify({
-      title: "BodaFake",
-      body: "¡La prueba de notificaciones funciona!",
+      title: "Ibiza Night",
+      body:
+        "¡La prueba de notificaciones funciona!",
       url: "/camera",
     });
 
@@ -56,9 +59,11 @@ export async function POST() {
       try {
         await webpush.sendNotification(
           {
-            endpoint: subscription.endpoint,
+            endpoint:
+              subscription.endpoint,
             keys: {
-              p256dh: subscription.p256dh,
+              p256dh:
+                subscription.p256dh,
               auth: subscription.auth,
             },
           },
@@ -81,7 +86,10 @@ export async function POST() {
           await supabaseAdmin
             .from("push_subscriptions")
             .delete()
-            .eq("id", subscription.id);
+            .eq(
+              "id",
+              subscription.id
+            );
         }
       }
     }

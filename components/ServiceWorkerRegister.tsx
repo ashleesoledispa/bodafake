@@ -12,7 +12,7 @@ export default function ServiceWorkerRegister() {
         .register("/sw.js")
         .then((registration) => {
           console.log(
-            "BodaFake Service Worker registrado:",
+            "Ibiza Night Service Worker registrado:",
             registration.scope
           );
         })

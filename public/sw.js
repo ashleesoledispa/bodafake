@@ -1,4 +1,4 @@
-const CACHE_NAME = "bodafake-v1";
+const CACHE_NAME = "ibiza-night-v1";
 
 const APP_SHELL = [
   "/",
@@ -48,7 +48,7 @@ self.addEventListener("push", (event) => {
     );
 
     data = {
-      title: "BodaFake",
+      title: "Ibiza Night",
       body: event.data
         ? event.data.text()
         : "Tienes un nuevo momento.",
@@ -56,7 +56,7 @@ self.addEventListener("push", (event) => {
   }
 
   const title =
-    data.title || "BodaFake";
+    data.title || "Ibiza Night";
 
   const options = {
     body:
@@ -68,7 +68,7 @@ self.addEventListener("push", (event) => {
       url: data.url || "/",
     },
     vibrate: [200, 100, 200],
-    tag: "bodafake-moment",
+    tag: "ibiza-night-moment",
     renotify: true,
   };
 

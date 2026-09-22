@@ -1,15 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+/* =========================================================
+   IBIZA NIGHT — DESIGN SYSTEM
+========================================================= */
 
 :root {
-  --background: #080808;
-  --navbar: #ffffff;
-  --paper: #f0eee8;
-  --paper-shadow: rgba(0, 0, 0, 0.38);
-  --text: #f5f3ee;
-  --muted: #8f8d88;
-  --dark-text: #111111;
-  --border: rgba(255, 255, 255, 0.1);
+  --black: #000000;
+  --deep-black: #070303;
+
+  --wine: #4a0d0d;
+  --wine-dark: #250606;
+
+  --red: #b91c1c;
+  --coral: #ff4b1f;
+  --orange: #ffa247;
+
+  --cream: #eed9b7;
+  --white: #f5f1e6;
+
+  --background: #000000;
+  --text: #f5f1e6;
+  --muted: rgba(238, 217, 183, 0.68);
+  --dark-text: #080808;
+
+  --paper: #f5f1e6;
+  --paper-shadow: rgba(0, 0, 0, 0.55);
+
+  --border: rgba(245, 241, 230, 0.16);
 }
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
   box-sizing: border-box;
@@ -19,20 +41,23 @@
 
 html {
   min-height: 100%;
-  background: #000;
+  background: var(--black);
   scroll-behavior: smooth;
 }
 
 body {
   min-height: 100%;
-  background: transparent;
+  background: var(--black);
   color: var(--text);
   font-family: "DM Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-button {
+button,
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -41,204 +66,485 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* =========================================
+/* =========================================================
    APP
-========================================= */
+========================================================= */
 
 .app-shell {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding-bottom: 120px;
+  min-height: 100svh;
+  padding-bottom: 130px;
   overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(185, 28, 28, 0.28),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      #090101 0%,
+      #210505 38%,
+      #080101 100%
+    );
 }
 
-/* =========================================
-   LOADING / REDIRECT
-========================================= */
+/* =========================================================
+   LOADING
+========================================================= */
 
 .setup-loading {
   min-height: 100vh;
+  min-height: 100svh;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #080808;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(185, 28, 28, 0.28),
+      transparent 50%
+    ),
+    #000;
+
+  color: var(--cream);
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
 }
 
-/* =========================================
-   BACKGROUND VIDEO
-========================================= */
+/* =========================================================
+   IBIZA BACKGROUND
+========================================================= */
 
-.background-video {
+.ibiza-background {
   position: fixed;
   inset: 0;
+
   width: 100vw;
   height: 100vh;
-  object-fit: cover;
-  object-position: center center;
+
+  overflow: hidden;
+
   z-index: 0;
   pointer-events: none;
-  display: block;
-  background: #000;
+
+  background:
+    linear-gradient(
+      180deg,
+      #050000 0%,
+      #190303 32%,
+      #4a0d0d 58%,
+      #b91c1c 78%,
+      #ff4b1f 100%
+    );
 }
 
-.background-overlay {
-  position: fixed;
+.ibiza-gradient {
+  position: absolute;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 1;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 55%,
+      rgba(255, 162, 71, 0.48),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 20% 70%,
+      rgba(185, 28, 28, 0.55),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 85% 30%,
+      rgba(255, 75, 31, 0.22),
+      transparent 35%
+    );
+
+  mix-blend-mode: screen;
+}
+
+.ibiza-sunset {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 42%;
+
+  height: 48%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 162, 71, 0),
+      rgba(255, 75, 31, 0.28) 28%,
+      rgba(185, 28, 28, 0.35) 55%,
+      rgba(0, 0, 0, 0.92) 100%
+    );
+
+  filter: blur(18px);
+}
+
+.ibiza-window {
+  position: absolute;
+
+  top: 8%;
+  right: -9%;
+
+  width: min(46vw, 680px);
+  height: min(72vh, 850px);
+
+  border-radius: 45% 45% 40% 40% / 22% 22% 28% 28%;
+
+  padding: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2c0808,
+      #ff4b1f 35%,
+      #7a0f0f 60%,
+      #170303
+    );
+
+  box-shadow:
+    0 0 0 5px rgba(255, 75, 31, 0.14),
+    0 0 70px rgba(255, 75, 31, 0.15),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+
+  transform: rotate(1deg);
+}
+
+.ibiza-window-frame {
+  width: 100%;
+  height: 100%;
+
+  padding: 14px;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      #080000,
+      #ff4b1f,
+      #4a0d0d,
+      #050000
+    );
+
+  box-shadow:
+    inset 0 0 25px rgba(0, 0, 0, 0.8);
+}
+
+.ibiza-window-view {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: 38% 38% 34% 34% / 18% 18% 24% 24%;
+
+  background:
+    linear-gradient(
+      180deg,
+      #2b0707 0%,
+      #6f130d 30%,
+      #ff4b1f 49%,
+      #ffa247 59%,
+      #8d1c15 66%,
+      #170505 100%
+    );
+}
+
+.ibiza-horizon {
+  position: absolute;
+
+  left: -20%;
+  right: -20%;
+  top: 55%;
+
+  height: 3px;
+
+  background: rgba(245, 241, 230, 0.75);
+
+  box-shadow:
+    0 0 20px rgba(255, 162, 71, 0.9),
+    0 0 45px rgba(255, 75, 31, 0.7);
+}
+
+.ibiza-sun {
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  left: 50%;
+  top: 47%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #fff0c4 0%,
+      #ffa247 35%,
+      #ff4b1f 70%,
+      transparent 72%
+    );
+
+  filter: blur(1px);
+
+  opacity: 0.9;
+}
+
+.ibiza-sea {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 44%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(74, 13, 13, 0.15),
+      rgba(0, 0, 0, 0.82)
+    );
+
+  opacity: 0.85;
+}
+
+.ibiza-grain {
+  position: absolute;
+  inset: -50%;
+
+  opacity: 0.09;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+
+  mix-blend-mode: screen;
+
   pointer-events: none;
 }
 
-/* =========================================
+/* =========================================================
    NAVBAR
-========================================= */
+========================================================= */
 
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 100 !important;
+
+  z-index: 100;
 
   width: 100%;
-  height: 94px;
+  height: 88px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 0 42px;
+  padding: 0 32px;
 
-  background: #ffffff;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.48)
+    );
+
+  border-bottom: 1px solid rgba(238, 217, 183, 0.14);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* =========================================
-   BRAND LOCKUP
-========================================= */
-
-.brand-lockup {
-  display: flex;
-  align-items: center;
+.ibiza-topbar {
   justify-content: center;
-  gap: 17px;
-  height: 100%;
 }
 
-.bodafake-logo {
-  display: block;
-  width: auto;
-  height: 58px;
-  max-width: 300px;
-  object-fit: contain;
-}
+.ibiza-brand {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
 
-.brand-by {
-  color: #111111;
-  font-size: 15px;
-  font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.02em;
+
+  color: var(--white);
+
+  text-transform: none;
+
+  text-shadow:
+    0 0 20px rgba(255, 75, 31, 0.2);
 }
 
-.vertigo-logo {
-  display: block;
-  width: auto;
-  height: 59px;
-  max-width: 150px;
-  object-fit: contain;
+.ibiza-brand-main {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 38px;
+  font-weight: 500;
+
+  letter-spacing: -0.05em;
 }
 
+.ibiza-brand-night {
+  margin-left: 4px;
 
+  font-family: "Allura", cursive;
 
-/* =========================================
+  font-size: 43px;
+  font-weight: 400;
+
+  color: var(--cream);
+
+  transform: translateY(2px);
+}
+
+/* =========================================================
    INTRO
-========================================= */
+========================================================= */
 
 .event-heading {
   position: relative;
   z-index: 2;
 
-  width: min(1280px, calc(100% - 84px));
+  width: min(1180px, calc(100% - 84px));
+
   margin: 0 auto;
-  padding: 82px 0 52px;
+
+  padding: 55px 0 30px;
+}
+
+.ibiza-heading {
+  min-height: 530px;
 }
 
 .eyebrow {
-  margin-bottom: 19px;
-  color: var(--muted);
+  margin-bottom: 10px;
+
+  color: var(--cream);
+
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.23em;
+
+  letter-spacing: 0.32em;
   line-height: 1.2;
+
   text-transform: uppercase;
 }
 
 .event-heading h1 {
-  color: var(--text);
-  font-size: clamp(48px, 6.2vw, 88px);
+  color: var(--white);
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(68px, 9vw, 145px);
+
   font-weight: 500;
-  letter-spacing: -0.065em;
-  line-height: 0.89;
+
+  letter-spacing: -0.07em;
+  line-height: 0.78;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.45);
 }
 
 .heading-description {
-  max-width: 400px;
-  margin-top: 27px;
-  color: var(--muted);
+  max-width: 430px;
+
+  margin-top: 20px;
+
+  color: var(--cream);
+
   font-size: 14px;
   font-weight: 400;
+
   line-height: 1.55;
+
+  letter-spacing: 0.02em;
 }
 
 .photo-prompt {
-  max-width: 850px;
-  margin-top: 34px;
-  color: var(--text);
-  font-size: clamp(32px, 4.2vw, 58px);
+  max-width: 680px;
+
+  margin-top: 25px;
+
+  color: var(--orange);
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(40px, 5vw, 70px);
+
   font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
+
+  letter-spacing: -0.045em;
+
+  line-height: 0.92;
 }
 
-/* =========================================
+/* =========================================================
    PHOTO WALL
-========================================= */
+========================================================= */
 
 .photo-wall {
   position: relative;
   z-index: 2;
 
-  width: min(1280px, calc(100% - 84px));
+  width: min(1180px, calc(100% - 84px));
+
   margin: 0 auto;
 
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  gap: 30px 28px;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 30px 26px;
+
   align-items: start;
 }
 
-/* =========================================
-   POLAROID
-========================================= */
+.ibiza-photo-wall {
+  padding-bottom: 50px;
+}
+
+/* =========================================================
+   PHOTO CARDS
+========================================================= */
 
 .polaroid {
   position: relative;
+
   width: 100%;
 
-  padding: 12px 12px 22px;
+  padding: 8px 8px 16px;
 
-  background: var(--paper);
+  background:
+    linear-gradient(
+      145deg,
+      #f5f1e6,
+      #eed9b7
+    );
+
   color: var(--dark-text);
 
   box-shadow:
-    0 22px 50px var(--paper-shadow),
-    0 4px 10px rgba(0, 0, 0, 0.22);
+    0 25px 55px rgba(0, 0, 0, 0.58),
+    0 5px 12px rgba(0, 0, 0, 0.3);
 
   transform: rotate(0deg);
 
@@ -251,42 +557,62 @@ a {
   outline: none;
 }
 
-.polaroid:nth-child(2n) {
-  transform: rotate(0.45deg);
-}
-
-.polaroid:nth-child(3n) {
-  transform: rotate(-0.35deg);
-}
-
-.polaroid:nth-child(5n) {
+.ibiza-photo-card:nth-child(2n) {
   transform: rotate(0.7deg);
+}
+
+.ibiza-photo-card:nth-child(3n) {
+  transform: rotate(-0.5deg);
+}
+
+.ibiza-photo-card:nth-child(5n) {
+  transform: rotate(0.9deg);
 }
 
 .polaroid:hover,
 .polaroid:focus-visible {
   z-index: 5;
 
-  transform: translateY(-7px) rotate(0deg);
+  transform:
+    translateY(-8px)
+    rotate(0deg);
 
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.48),
-    0 5px 12px rgba(0, 0, 0, 0.2);
+    0 32px 70px rgba(0, 0, 0, 0.65),
+    0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* =========================================
+/* =========================================================
    PHOTO
-========================================= */
+========================================================= */
 
 .photo-frame {
   position: relative;
 
   width: 100%;
+
   aspect-ratio: 1 / 1;
 
   overflow: hidden;
 
-  background: #d8d5ce;
+  background: #170303;
+}
+
+.photo-frame::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 75, 31, 0.08),
+      transparent 45%,
+      rgba(0, 0, 0, 0.2)
+    );
 }
 
 .photo-frame img {
@@ -302,39 +628,46 @@ a {
 
 .polaroid:hover .photo-frame img,
 .polaroid:focus-visible .photo-frame img {
-  transform: scale(1.025);
+  transform: scale(1.035);
 }
 
-/* =========================================
-   POLAROID INFO
-========================================= */
+/* =========================================================
+   PHOTO INFO
+========================================================= */
 
 .polaroid-info {
-  padding: 14px 3px 0;
+  padding: 12px 4px 0;
 }
 
 .photo-name {
-  color: #151515;
+  color: #130303;
 
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: -0.025em;
+
+  letter-spacing: -0.02em;
+
   line-height: 1.2;
 }
 
 .photo-time {
-  margin-top: 4px;
+  margin-top: 5px;
 
-  color: #77746e;
+  color: #6f2420;
 
-  font-size: 10px;
-  font-weight: 400;
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.08em;
+
   line-height: 1.2;
+
+  text-transform: uppercase;
 }
 
-/* =========================================
-   PHOTO LIGHTBOX
-========================================= */
+/* =========================================================
+   LIGHTBOX
+========================================================= */
 
 .photo-lightbox {
   position: fixed;
@@ -348,10 +681,15 @@ a {
 
   padding: 30px;
 
-  background: rgba(0, 0, 0, 0.88);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(74, 13, 13, 0.7),
+      rgba(0, 0, 0, 0.96) 70%
+    );
 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .photo-lightbox-content {
@@ -369,13 +707,16 @@ a {
   display: block;
 
   width: auto;
+
   max-width: 100%;
   max-height: calc(100vh - 130px);
 
   object-fit: contain;
 
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.5);
+    0 30px 100px rgba(0, 0, 0, 0.7);
+
+  border: 1px solid rgba(238, 217, 183, 0.16);
 }
 
 .photo-lightbox-close {
@@ -393,14 +734,16 @@ a {
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(238, 217, 183, 0.35);
   border-radius: 50%;
 
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
 
-  font-size: 32px;
+  color: var(--cream);
+
+  font-size: 30px;
   font-weight: 300;
+
   line-height: 1;
 
   cursor: pointer;
@@ -415,7 +758,7 @@ a {
 
   padding-top: 12px;
 
-  color: #fff;
+  color: var(--white);
 }
 
 .photo-lightbox-info strong {
@@ -424,56 +767,73 @@ a {
 }
 
 .photo-lightbox-info span {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 11px;
+  color: var(--cream);
+
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
 }
 
-/* =========================================
+/* =========================================================
    CAPTURE BUTTON
-========================================= */
+========================================================= */
 
 .capture-button {
   position: fixed !important;
+
   right: 28px;
   bottom: 28px;
+
   z-index: 200 !important;
 
   display: flex;
   align-items: center;
-  gap: 10px;
 
-  min-height: 52px;
+  gap: 11px;
 
-  padding: 0 20px 0 13px;
+  min-height: 56px;
 
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 100px;
+  padding: 0 22px 0 14px;
 
-  background: #f3f1eb;
-  color: #101010;
+  border: 1px solid rgba(255, 162, 71, 0.65);
+  border-radius: 3px;
 
-  font-size: 12px;
-  font-weight: 600;
+  background:
+    linear-gradient(
+      135deg,
+      #b91c1c,
+      #ff4b1f
+    );
+
+  color: var(--white);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
 
   cursor: pointer;
 
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.4),
-    0 3px 8px rgba(0, 0, 0, 0.25);
+    0 15px 40px rgba(0, 0, 0, 0.55),
+    0 0 25px rgba(255, 75, 31, 0.16);
 
   transition:
     transform 200ms ease,
-    background 200ms ease,
-    box-shadow 200ms ease;
+    box-shadow 200ms ease,
+    filter 200ms ease;
 }
 
 .capture-button:hover {
-  background: #ffffff;
+  filter: brightness(1.1);
+
   transform: translateY(-3px);
 
   box-shadow:
-    0 20px 42px rgba(0, 0, 0, 0.48),
-    0 4px 10px rgba(0, 0, 0, 0.25);
+    0 20px 48px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(255, 75, 31, 0.28);
 }
 
 .capture-button:active {
@@ -487,7 +847,8 @@ a {
   display: grid;
   place-items: center;
 
-  border: 1.5px solid #151515;
+  border: 1.5px solid var(--cream);
+
   border-radius: 50%;
 }
 
@@ -499,287 +860,51 @@ a {
 
   border-radius: 50%;
 
-  background: #151515;
+  background: var(--cream);
 }
 
-/* =========================================
-   TABLET
-========================================= */
+/* =========================================================
+   WALL STATES
+========================================================= */
 
-@media (max-width: 1000px) {
-  .topbar {
-    height: 86px;
-    padding: 0 28px;
-  }
+.wall-loading,
+.wall-empty {
+  grid-column: 1 / -1;
 
-  .brand-lockup {
-    gap: 13px;
-  }
+  min-height: 220px;
 
-  .bodafake-logo {
-    height: 51px;
-    max-width: 250px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  .brand-by {
-    font-size: 13px;
-  }
+  text-align: center;
 
-  .vertigo-logo {
-    height: 51px;
-    max-width: 130px;
-  }
+  color: var(--cream);
 
-
-  .event-heading,
-  .photo-wall {
-    width: calc(100% - 56px);
-  }
-
-  .photo-wall {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-  }
+  padding: 40px;
 }
 
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 600px) {
-  .app-shell {
-    min-height: 100svh;
-    padding-bottom: 100px;
-  }
-
-  .background-video {
-    width: 100%;
-    height: 100svh;
-    object-fit: cover;
-  }
-
-  .topbar {
-    height: 76px;
-    padding: 0 58px 0 17px;
-  }
-
-  .brand-lockup {
-    gap: 9px;
-    width: 100%;
-  }
-
-  .bodafake-logo {
-    height: 39px;
-    max-width: 165px;
-  }
-
-  .brand-by {
-    font-size: 10px;
-  }
-
-  .vertigo-logo {
-    height: 39px;
-    max-width: 88px;
-  }
-
-  .event-heading {
-    width: calc(100% - 34px);
-    padding: 49px 0 32px;
-  }
-
-  .eyebrow {
-    margin-bottom: 15px;
-    font-size: 8px;
-    letter-spacing: 0.19em;
-  }
-
-  .event-heading h1 {
-    font-size: clamp(45px, 14vw, 68px);
-    line-height: 0.9;
-    letter-spacing: -0.06em;
-  }
-
-  .heading-description {
-    max-width: 280px;
-    margin-top: 20px;
-    font-size: 12px;
-    line-height: 1.55;
-  }
-
-  .photo-prompt {
-    max-width: 330px;
-    margin-top: 24px;
-    font-size: clamp(28px, 8.5vw, 42px);
-    line-height: 0.98;
-  }
-
-  .photo-wall {
-    width: calc(100% - 34px);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 13px;
-  }
-
-  .polaroid {
-    padding: 7px 7px 12px;
-  }
-
-  .polaroid:nth-child(2n) {
-    transform: rotate(0.35deg);
-  }
-
-  .polaroid:nth-child(3n) {
-    transform: rotate(-0.25deg);
-  }
-
-  .polaroid:nth-child(5n) {
-    transform: rotate(0.4deg);
-  }
-
-  .polaroid-info {
-    padding: 10px 2px 0;
-  }
-
-  .photo-name {
-    font-size: 9.5px;
-  }
-
-  .photo-time {
-    margin-top: 3px;
-    font-size: 7.5px;
-  }
-
-  .capture-button {
-    right: 16px;
-    bottom: 16px;
-
-    min-height: 48px;
-
-    padding: 0 16px 0 11px;
-
-    font-size: 10px;
-  }
-
-  .capture-icon {
-    width: 25px;
-    height: 25px;
-  }
-
-  .capture-icon span {
-    width: 8px;
-    height: 8px;
-  }
-
-  /* LIGHTBOX MOBILE */
-
-  .photo-lightbox {
-    padding: 18px;
-  }
-
-  .photo-lightbox-content {
-    width: 100%;
-    max-height: calc(100svh - 36px);
-  }
-
-  .photo-lightbox-content img {
-    max-width: 100%;
-    max-height: calc(100svh - 110px);
-  }
-
-  .photo-lightbox-close {
-    top: 14px;
-    right: 14px;
-
-    width: 42px;
-    height: 42px;
-
-    font-size: 28px;
-  }
-
-  .photo-lightbox-info {
-    padding-top: 10px;
-  }
+.wall-loading {
+  font-size: 15px;
 }
 
-/* =========================================
-   VERY SMALL PHONES
-========================================= */
+.wall-empty p {
+  margin: 0;
 
-@media (max-width: 370px) {
-  .topbar {
-    height: 70px;
-    padding: 0 49px 0 11px;
-  }
+  font-family: "Cormorant Garamond", serif;
 
-  .brand-lockup {
-    gap: 6px;
-  }
+  font-size: clamp(28px, 4vw, 48px);
 
-  .bodafake-logo {
-    height: 34px;
-    max-width: 140px;
-  }
+  letter-spacing: -0.04em;
+}
 
-  .brand-by {
-    font-size: 8px;
-  }
+.wall-empty span {
+  margin-top: 10px;
 
-  .vertigo-logo {
-    height: 34px;
-    max-width: 72px;
-  }
+  color: rgba(238, 217, 183, 0.65);
 
-  .menu-button {
-    right: 8px;
-    width: 38px;
-    height: 38px;
-  }
-
-  .menu-button span {
-    width: 17px;
-  }
-
-  .event-heading {
-    width: calc(100% - 26px);
-    padding-top: 42px;
-  }
-
-  .photo-wall {
-    width: calc(100% - 26px);
-    gap: 10px;
-  }
-
-  .polaroid {
-    padding: 6px 6px 10px;
-  }
-
-  .polaroid-info {
-    padding-top: 8px;
-  }
-
-  .photo-name {
-    font-size: 8.5px;
-  }
-
-  .photo-time {
-    font-size: 7px;
-  }
-
-  .capture-button {
-    right: 14px;
-    bottom: 14px;
-
-    width: 48px;
-    height: 48px;
-    min-height: 48px;
-
-    padding: 0;
-
-    justify-content: center;
-  }
-
-  .capture-button > span:last-child {
-    display: none;
-  }
+  font-size: 14px;
 }
 
 /* =========================================================
@@ -794,13 +919,51 @@ a {
 
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: flex-start;
 
   padding: 0 32px 40px;
 
-  background: #080808;
-  color: #fff;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 20%,
+      rgba(185, 28, 28, 0.35),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #000 0%,
+      #260606 45%,
+      #000 100%
+    );
+
+  color: var(--white);
+}
+
+.setup-page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 600px;
+  height: 600px;
+
+  top: -250px;
+  right: -250px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 75, 31, 0.22),
+      transparent 70%
+    );
+
+  pointer-events: none;
 }
 
 .setup-card {
@@ -811,28 +974,49 @@ a {
 
   padding: 48px;
 
-  background: rgba(255, 255, 255, 0.96);
-  color: #080808;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(245, 241, 230, 0.98),
+      rgba(238, 217, 183, 0.98)
+    );
+
+  color: var(--dark-text);
+
+  border-top: 4px solid var(--coral);
 
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.35);
+    0 30px 90px rgba(0, 0, 0, 0.65),
+    0 0 50px rgba(185, 28, 28, 0.12);
 }
 
 .setup-eyebrow {
   margin: 0 0 18px;
 
-  font-size: 11px;
+  color: var(--red);
+
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+
+  letter-spacing: 0.22em;
+
+  text-transform: uppercase;
 }
 
 .setup-card h1 {
   margin: 0;
 
-  font-size: clamp(38px, 6vw, 64px);
-  line-height: 0.95;
+  color: #120303;
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(42px, 6vw, 66px);
+
+  line-height: 0.88;
+
   letter-spacing: -0.06em;
-  font-weight: 500;
+
+  font-weight: 600;
 }
 
 .setup-description {
@@ -840,8 +1024,11 @@ a {
 
   margin: 26px 0 38px;
 
-  font-size: 17px;
-  line-height: 1.45;
+  color: #4d2926;
+
+  font-size: 16px;
+
+  line-height: 1.5;
 }
 
 .setup-form label {
@@ -849,11 +1036,14 @@ a {
 
   margin-bottom: 9px;
 
-  font-size: 12px;
+  color: #42100e;
+
+  font-size: 11px;
   font-weight: 700;
 
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+
+  letter-spacing: 0.12em;
 }
 
 .setup-form input {
@@ -862,10 +1052,11 @@ a {
 
   padding: 0 18px;
 
-  border: 1px solid #cfcfcf;
+  border: 1px solid rgba(74, 13, 13, 0.3);
 
-  background: #fff;
-  color: #080808;
+  background: rgba(255, 255, 255, 0.68);
+
+  color: #120303;
 
   font-family: inherit;
   font-size: 17px;
@@ -874,7 +1065,10 @@ a {
 }
 
 .setup-form input:focus {
-  border-color: #080808;
+  border-color: var(--coral);
+
+  box-shadow:
+    0 0 0 3px rgba(255, 75, 31, 0.12);
 }
 
 .setup-button {
@@ -885,18 +1079,32 @@ a {
 
   border: 0;
 
-  background: #080808;
-  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      var(--wine),
+      var(--red)
+    );
+
+  color: var(--white);
 
   font-family: inherit;
-  font-size: 15px;
+
+  font-size: 13px;
   font-weight: 700;
 
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
   cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(74, 13, 13, 0.3);
 }
 
 .setup-button:disabled {
-  opacity: 0.35;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -905,48 +1113,67 @@ a {
 
   margin-top: 16px;
 
+  padding: 10px;
+
   border: 0;
 
   background: transparent;
-  color: #555;
+
+  color: #704642;
 
   font-family: inherit;
-  font-size: 13px;
+
+  font-size: 12px;
 
   cursor: pointer;
 }
 
-/* =========================================
+.setup-error {
+  margin: 12px 0 0;
+
+  color: #a50000;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+}
+
+/* =========================================================
    SETUP LOGO
-========================================= */
+========================================================= */
 
 .setup-brand {
   width: 100%;
   height: 38svh;
+
   min-height: 250px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;
+  z-index: 2;
 }
 
 .setup-brand img {
   display: block;
 
   width: min(72vw, 340px);
+
   height: auto;
 
   object-fit: contain;
 }
 
-/* =========================================
+/* =========================================================
    IOS INSTRUCTIONS
-========================================= */
+========================================================= */
 
 .ios-instructions {
   margin: 32px 0;
 
-  border-top: 1px solid #ddd;
+  border-top: 1px solid rgba(74, 13, 13, 0.2);
 }
 
 .ios-step {
@@ -956,21 +1183,27 @@ a {
 
   padding: 19px 0;
 
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(74, 13, 13, 0.2);
 }
 
 .ios-step span {
   min-width: 25px;
 
+  color: var(--red);
+
   font-size: 11px;
   font-weight: 700;
+
   letter-spacing: 0.08em;
 }
 
 .ios-step p {
   margin: 0;
 
+  color: #402321;
+
   font-size: 15px;
+
   line-height: 1.4;
 }
 
@@ -986,7 +1219,8 @@ a {
   flex-direction: column;
 
   background: #000;
-  color: #fff;
+
+  color: var(--white);
 }
 
 .camera-header {
@@ -1007,16 +1241,17 @@ a {
 
 .camera-back,
 .camera-name {
-  border: 0;
+  border: 1px solid rgba(238, 217, 183, 0.25);
 
-  color: #fff;
+  color: var(--white);
 
   font-family: inherit;
+
   font-size: 13px;
 }
 
 .camera-back {
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.48);
 
   padding: 10px 14px;
 
@@ -1026,7 +1261,7 @@ a {
 .camera-name {
   padding: 10px 14px;
 
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(74, 13, 13, 0.6);
 }
 
 .camera-view {
@@ -1063,16 +1298,33 @@ a {
 .camera-error h1 {
   margin: 0 0 12px;
 
-  font-size: 30px;
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 38px;
+
   letter-spacing: -0.04em;
 }
 
 .camera-error p {
   margin: 0;
 
-  color: #bbb;
+  color: #d7c6b2;
 
   line-height: 1.5;
+}
+
+.camera-error-button {
+  margin-top: 22px;
+
+  padding: 13px 20px;
+
+  border: 1px solid var(--coral);
+
+  background: var(--wine);
+
+  color: var(--white);
+
+  cursor: pointer;
 }
 
 .camera-controls {
@@ -1081,10 +1333,12 @@ a {
   z-index: 10;
 
   bottom: 35px;
+
   left: 0;
   right: 0;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -1097,7 +1351,8 @@ a {
 
   padding: 5px;
 
-  border: 3px solid #fff;
+  border: 3px solid var(--white);
+
   border-radius: 50%;
 
   background: transparent;
@@ -1113,18 +1368,20 @@ a {
 
   border-radius: 50%;
 
-  background: #fff;
+  background: var(--white);
 }
 
 .camera-switch {
   width: 48px;
   height: 48px;
 
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(238, 217, 183, 0.7);
+
   border-radius: 50%;
 
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
+  background: rgba(74, 13, 13, 0.45);
+
+  color: var(--cream);
 
   font-size: 23px;
 
@@ -1144,6 +1401,7 @@ a {
   inset: 0;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -1163,6 +1421,7 @@ a {
   z-index: 10;
 
   bottom: 35px;
+
   left: 24px;
   right: 24px;
 
@@ -1179,20 +1438,32 @@ a {
   border: 0;
 
   font-family: inherit;
-  font-size: 15px;
+
+  font-size: 13px;
   font-weight: 700;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
 
   cursor: pointer;
 }
 
 .preview-secondary {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(245, 241, 230, 0.92);
+
   color: #080808;
 }
 
 .preview-primary {
-  background: #fff;
-  color: #080808;
+  background:
+    linear-gradient(
+      135deg,
+      var(--red),
+      var(--coral)
+    );
+
+  color: var(--white);
 }
 
 .preview-actions button:disabled {
@@ -1200,55 +1471,29 @@ a {
   cursor: not-allowed;
 }
 
-/* =========================================================
-   WALL STATES
-========================================================= */
+.publish-error {
+  position: absolute;
 
-.wall-loading,
-.wall-empty {
-  grid-column: 1 / -1;
+  left: 24px;
+  right: 24px;
 
-  min-height: 220px;
+  bottom: 105px;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  z-index: 20;
+
+  padding: 12px 14px;
+
+  border: 1px solid rgba(255, 75, 31, 0.5);
+
+  background: rgba(74, 13, 13, 0.92);
+
+  color: var(--cream);
+
+  font-size: 12px;
+
+  line-height: 1.4;
 
   text-align: center;
-
-  color: #fff;
-
-  padding: 40px;
-}
-
-.wall-loading {
-  font-size: 15px;
-}
-
-.wall-empty p {
-  margin: 0;
-
-  font-size: clamp(25px, 4vw, 45px);
-
-  letter-spacing: -0.04em;
-}
-
-.wall-empty span {
-  margin-top: 10px;
-
-  color: rgba(255, 255, 255, 0.65);
-
-  font-size: 14px;
-}
-
-.setup-error {
-  margin: 12px 0 0;
-
-  color: #c00000;
-
-  font-size: 13px;
-  line-height: 1.4;
 }
 
 /* =========================================================
@@ -1267,48 +1512,69 @@ a {
 
   padding: 24px;
 
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.7);
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .push-modal {
   width: 100%;
   max-width: 420px;
 
-  padding: 30px 24px 24px;
+  padding: 32px 24px 24px;
 
-  background: #fff;
-  color: #000;
+  background:
+    linear-gradient(
+      145deg,
+      #f5f1e6,
+      #eed9b7
+    );
 
-  border-radius: 18px;
+  color: #080808;
+
+  border-top: 4px solid var(--coral);
 
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.25);
+    0 25px 80px rgba(0, 0, 0, 0.55);
 }
 
 .push-modal-eyebrow {
   margin: 0 0 12px;
 
-  font-size: 11px;
+  color: var(--red);
+
+  font-size: 10px;
   font-weight: 700;
 
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
 }
 
 .push-modal h2 {
   margin: 0 0 12px;
 
-  font-size: 28px;
-  line-height: 1.05;
-  font-weight: 700;
+  color: #180303;
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 34px;
+
+  line-height: 0.95;
+
+  font-weight: 600;
+
+  letter-spacing: -0.04em;
 }
 
 .push-modal > p:not(.push-modal-eyebrow) {
   margin: 0 0 24px;
 
+  color: #4a2926;
+
   font-size: 15px;
+
   line-height: 1.5;
 }
 
@@ -1317,13 +1583,22 @@ a {
   min-height: 52px;
 
   border: 0;
-  border-radius: 999px;
 
-  background: #000;
-  color: #fff;
+  background:
+    linear-gradient(
+      135deg,
+      var(--wine),
+      var(--red)
+    );
 
-  font-size: 15px;
+  color: var(--white);
+
+  font-size: 14px;
   font-weight: 600;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
 
   cursor: pointer;
 }
@@ -1345,34 +1620,263 @@ a {
   border: 0;
 
   background: transparent;
-  color: #000;
 
-  font-size: 14px;
+  color: #6b4642;
+
+  font-size: 13px;
 
   cursor: pointer;
 }
 
-/* =========================================
-   MOBILE SETUP
-========================================= */
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .ibiza-window {
+    right: -22%;
+
+    width: 58vw;
+    height: 68vh;
+
+    opacity: 0.72;
+  }
+
+  .event-heading,
+  .photo-wall {
+    width: calc(100% - 56px);
+  }
+
+  .photo-wall {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 600px) {
+  .app-shell {
+    min-height: 100svh;
+
+    padding-bottom: 100px;
+  }
+
+  .ibiza-background {
+    position: fixed;
+  }
+
+  .ibiza-window {
+    top: 11%;
+    right: -42%;
+
+    width: 88vw;
+    height: 65vh;
+
+    padding: 13px;
+
+    opacity: 0.48;
+
+    transform: rotate(2deg);
+  }
+
+  .ibiza-window-frame {
+    padding: 8px;
+  }
+
+  .ibiza-sun {
+    width: 65px;
+    height: 65px;
+  }
+
+  .topbar {
+    height: 76px;
+
+    padding: 0 18px;
+  }
+
+  .ibiza-brand-main {
+    font-size: 31px;
+  }
+
+  .ibiza-brand-night {
+    font-size: 36px;
+  }
+
+  .event-heading {
+    width: calc(100% - 34px);
+
+    padding: 38px 0 22px;
+  }
+
+  .ibiza-heading {
+    min-height: 0;
+  }
+
+  .eyebrow {
+    margin-bottom: 9px;
+
+    font-size: 8px;
+
+    letter-spacing: 0.25em;
+  }
+
+  .event-heading h1 {
+    font-size: clamp(
+      60px,
+      19vw,
+      92px
+    );
+
+    line-height: 0.76;
+
+    letter-spacing: -0.07em;
+  }
+
+  .heading-description {
+    max-width: 280px;
+
+    margin-top: 24px;
+
+    color: var(--cream);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+  }
+
+  .photo-prompt {
+    max-width: 320px;
+
+    margin-top: 18px;
+
+    font-size: clamp(
+      35px,
+      10vw,
+      48px
+    );
+
+    line-height: 0.9;
+  }
+
+  .photo-wall {
+    width: calc(100% - 34px);
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+  }
+
+  .ibiza-photo-card {
+    padding: 6px 6px 12px;
+  }
+
+  .ibiza-photo-card:nth-child(2n) {
+    transform: rotate(0.45deg);
+  }
+
+  .ibiza-photo-card:nth-child(3n) {
+    transform: rotate(-0.35deg);
+  }
+
+  .ibiza-photo-card:nth-child(5n) {
+    transform: rotate(0.55deg);
+  }
+
+  .polaroid-info {
+    padding: 9px 2px 0;
+  }
+
+  .photo-name {
+    font-size: 9px;
+  }
+
+  .photo-time {
+    margin-top: 3px;
+
+    font-size: 6.8px;
+
+    letter-spacing: 0.06em;
+  }
+
+  .capture-button {
+    right: 16px;
+    bottom: 16px;
+
+    min-height: 50px;
+
+    padding: 0 17px 0 11px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.08em;
+  }
+
+  .capture-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .capture-icon span {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* LIGHTBOX */
+
+  .photo-lightbox {
+    padding: 18px;
+  }
+
+  .photo-lightbox-content {
+    width: 100%;
+
+    max-height:
+      calc(100svh - 36px);
+  }
+
+  .photo-lightbox-content img {
+    max-width: 100%;
+
+    max-height:
+      calc(100svh - 110px);
+  }
+
+  .photo-lightbox-close {
+    top: 14px;
+    right: 14px;
+
+    width: 42px;
+    height: 42px;
+
+    font-size: 28px;
+  }
+
+  .photo-lightbox-info {
+    padding-top: 10px;
+  }
+
+  /* SETUP */
+
   .setup-page {
-  min-height: 100svh;
+    min-height: 100svh;
 
-  padding: 0 18px 32px;
+    padding: 0 18px 32px;
 
-  align-items: center;
-  justify-content: flex-start;
-}
+    align-items: center;
+    justify-content: flex-start;
+  }
 
   .setup-card {
-  width: 100%;
+    width: 100%;
 
-  padding: 30px 24px 34px;
-
-  margin-bottom: 0;
-}
+    padding: 30px 24px 34px;
+  }
 
   .setup-card h1 {
     font-size: 43px;
@@ -1380,23 +1884,29 @@ a {
 
   .setup-description {
     font-size: 15px;
+
     margin: 22px 0 30px;
   }
 
   .setup-brand {
-  width: 100%;
-  height: 38svh;
-  min-height: 250px;
-}
+    width: 100%;
+
+    height: 38svh;
+
+    min-height: 250px;
+  }
 
   .setup-brand img {
-  width: min(76vw, 330px);
-  height: auto;
+    width: min(76vw, 330px);
 
-  max-width: none;
-}
+    height: auto;
+
+    max-width: none;
+  }
+
   .ios-step {
     gap: 14px;
+
     padding: 17px 0;
   }
 
@@ -1404,17 +1914,934 @@ a {
     font-size: 14px;
   }
 
+  /* CAMERA */
+
   .camera-header {
     padding: 18px;
   }
 
   .camera-controls {
     bottom: 28px;
+
     gap: 38px;
   }
 
   .shutter {
     width: 72px;
     height: 72px;
+  }
+
+  .preview-actions {
+    bottom: 28px;
+  }
+
+  .publish-error {
+    bottom: 98px;
+
+    left: 18px;
+    right: 18px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 370px) {
+  .topbar {
+    height: 70px;
+
+    padding: 0 11px;
+  }
+
+  .ibiza-brand-main {
+    font-size: 28px;
+  }
+
+  .ibiza-brand-night {
+    font-size: 32px;
+  }
+
+  .event-heading {
+    width: calc(100% - 26px);
+
+    padding-top: 44px;
+  }
+
+  .event-heading h1 {
+    font-size: 59px;
+  }
+
+  .photo-wall {
+    width: calc(100% - 26px);
+
+    gap: 10px;
+  }
+
+  .polaroid {
+    padding: 5px 5px 9px;
+  }
+
+  .polaroid-info {
+    padding-top: 7px;
+  }
+
+  .photo-name {
+    font-size: 8px;
+  }
+
+  .photo-time {
+    font-size: 6px;
+  }
+
+  .capture-button {
+    right: 14px;
+    bottom: 14px;
+
+    width: 48px;
+    height: 48px;
+
+    min-height: 48px;
+
+    padding: 0;
+
+    justify-content: center;
+  }
+
+  .capture-button > span:last-child {
+    display: none;
+  }
+
+  .capture-icon {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* =========================
+   MENÚ IBIZA NIGHT
+========================= */
+
+.ibiza-menu-button {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  padding: 0;
+  border: 1px solid rgba(245, 241, 230, 0.35);
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+
+  cursor: pointer;
+  z-index: 100;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ibiza-menu-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.ibiza-menu-button span {
+  display: block;
+
+  width: 18px;
+  height: 1.5px;
+
+  background: #f5f1e6;
+  border-radius: 999px;
+}
+
+
+/* =========================
+   OVERLAY DEL MENÚ
+========================= */
+
+.ibiza-menu-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+
+  z-index: 200;
+
+  animation: ibizaMenuFade 0.2s ease;
+}
+
+
+/* =========================
+   PANEL DEL MENÚ
+========================= */
+
+.ibiza-menu {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: min(320px, calc(100vw - 40px));
+
+  padding: 22px;
+
+  background: rgba(12, 8, 8, 0.96);
+
+  border: 1px solid rgba(238, 217, 183, 0.2);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45);
+
+  border-radius: 18px;
+
+  animation: ibizaMenuSlide 0.25s ease;
+}
+
+
+/* =========================
+   CERRAR
+========================= */
+
+.ibiza-menu-close {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  margin-left: auto;
+  margin-bottom: 20px;
+
+  padding: 0;
+
+  border: 1px solid rgba(245, 241, 230, 0.2);
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #f5f1e6;
+
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   OPCIÓN PROYECTAR
+========================= */
+
+.ibiza-menu-option {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 4px;
+
+  border: none;
+  border-top: 1px solid rgba(238, 217, 183, 0.15);
+
+  background: transparent;
+
+  color: #f5f1e6;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    padding 0.2s ease;
+}
+
+.ibiza-menu-option:hover {
+  color: #ffa247;
+  padding-left: 8px;
+}
+
+.ibiza-menu-arrow {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+
+/* =========================
+   ANIMACIONES
+========================= */
+
+@keyframes ibizaMenuFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ibizaMenuSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .ibiza-menu-button {
+    right: 16px;
+
+    width: 42px;
+    height: 42px;
+  }
+
+  .ibiza-menu-button span {
+    width: 17px;
+  }
+
+  .ibiza-menu {
+    top: 14px;
+    right: 14px;
+
+    width: calc(100vw - 28px);
+
+    padding: 18px;
+  }
+}
+
+/* =========================
+   IBIZA NIGHT — PROYECTOR
+========================= */
+
+.project-page {
+  position: relative;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(126, 35, 23, 0.45),
+      transparent 38%
+    ),
+    #050303;
+
+  color: #f5f1e6;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.project-background {
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.project-gradient {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(74, 13, 13, 0.75),
+      transparent 42%,
+      rgba(185, 28, 28, 0.25)
+    );
+}
+
+.project-glow {
+  position: absolute;
+
+  width: 65vw;
+  height: 65vw;
+
+  max-width: 900px;
+  max-height: 900px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(255, 75, 31, 0.08);
+
+  filter: blur(100px);
+}
+
+.project-grain {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.08;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+
+  mix-blend-mode: overlay;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.project-header {
+  position: relative;
+
+  z-index: 10;
+
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+
+  align-items: center;
+
+  padding: 28px 38px;
+}
+
+.project-back-button {
+  justify-self: start;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 10px 14px;
+
+  border: 1px solid
+    rgba(245, 241, 230, 0.25);
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.2);
+
+  color: #f5f1e6;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.project-back-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color:
+    rgba(245, 241, 230, 0.5);
+}
+
+.project-back-button span:first-child {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.project-brand {
+  display: flex;
+
+  align-items: baseline;
+  gap: 5px;
+
+  color: #f5f1e6;
+
+  font-family:
+    "Cormorant Garamond",
+    serif;
+
+  font-size: 25px;
+  line-height: 1;
+}
+
+.project-brand span {
+  font-style: italic;
+}
+
+.project-brand strong {
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.project-live {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+}
+
+.project-live-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #ff4b1f;
+
+  box-shadow:
+    0 0 12px rgba(255, 75, 31, 0.8);
+}
+
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.project-content {
+  position: relative;
+
+  z-index: 2;
+
+  flex: 1;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px 50px 60px;
+}
+
+
+/* =========================
+   POLAROID
+========================= */
+
+.project-polaroid {
+  width: min(52vw, 780px);
+
+  padding: 14px 14px 20px;
+
+  background: #f1eadc;
+
+  color: #17100d;
+
+  box-shadow:
+    0 25px 70px
+      rgba(0, 0, 0, 0.55),
+    0 8px 24px
+      rgba(0, 0, 0, 0.3);
+
+  transform: rotate(-0.5deg);
+
+  animation:
+    projectPhotoIn
+    0.8s
+    ease both;
+}
+
+.project-photo-frame {
+  width: 100%;
+
+  overflow: hidden;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.project-photo-rotated {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.project-photo-rotated img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+  object-position: center;
+
+  transform: none;
+}
+
+.project-photo-frame img {
+  width: 100%;
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+  object-position: center;
+}
+
+.project-photo-info {
+  min-height: 82px;
+
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 18px 5px 0;
+}
+
+.project-photo-name {
+  margin: 0;
+
+  font-family:
+    "Cormorant Garamond",
+    serif;
+
+  font-size: clamp(
+    25px,
+    3vw,
+    42px
+  );
+
+  font-weight: 600;
+
+  line-height: 0.95;
+}
+
+.project-photo-time {
+  margin: 7px 0 0;
+
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+
+  opacity: 0.55;
+}
+
+.project-photo-number {
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  opacity: 0.55;
+}
+
+.project-photo-number span {
+  opacity: 0.5;
+}
+
+
+/* =========================
+   SIN FOTOS
+========================= */
+
+.project-empty {
+  max-width: 600px;
+
+  text-align: center;
+}
+
+.project-empty-eyebrow {
+  margin: 0 0 18px;
+
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 0.25em;
+
+  opacity: 0.6;
+}
+
+.project-empty h1 {
+  margin: 0;
+
+  font-family:
+    "Cormorant Garamond",
+    serif;
+
+  font-size: clamp(
+    50px,
+    7vw,
+    90px
+  );
+
+  font-weight: 500;
+
+  line-height: 0.85;
+}
+
+.project-empty p {
+  margin: 30px 0 0;
+
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  opacity: 0.55;
+}
+
+
+/* =========================
+   PROGRESO
+========================= */
+
+.project-progress {
+  position: absolute;
+
+  z-index: 10;
+
+  bottom: 28px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  gap: 5px;
+
+  max-width: 80vw;
+
+  overflow: hidden;
+}
+
+.project-progress span {
+  width: 20px;
+
+  height: 2px;
+
+  flex: 0 0 auto;
+
+  background:
+    rgba(245, 241, 230, 0.25);
+
+  transition:
+    background 0.3s ease,
+    width 0.3s ease;
+}
+
+.project-progress span.active {
+  width: 40px;
+
+  background:
+    rgba(245, 241, 230, 0.9);
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.project-loading {
+  align-items: center;
+
+  justify-content: center;
+
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 0.25em;
+}
+
+
+/* =========================
+   ANIMACIÓN FOTO
+========================= */
+
+@keyframes projectPhotoIn {
+  from {
+    opacity: 0;
+
+    transform:
+      rotate(-1.5deg)
+      scale(0.97)
+      translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      rotate(-0.5deg)
+      scale(1)
+      translateY(0);
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .project-header {
+    padding: 18px 16px;
+  }
+
+  .project-brand {
+    font-size: 21px;
+  }
+
+  .project-brand strong {
+    font-size: 7px;
+  }
+
+  .project-live {
+    font-size: 8px;
+  }
+
+  .project-back-button {
+    padding: 8px 11px;
+
+    font-size: 9px;
+  }
+
+  .project-content {
+    padding: 20px 18px 55px;
+  }
+
+  .project-polaroid {
+    width: 100%;
+
+    max-height: none;
+
+    padding: 11px 11px 18px;
+
+    transform: rotate(-0.4deg);
+  }
+
+  .project-photo-frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .project-photo-rotated {
+    width: 72%;
+    height: 72%;
+  }
+
+  .project-photo-info {
+    min-height: 65px;
+
+    padding-top: 13px;
+  }
+
+  .project-photo-name {
+    font-size: 27px;
+  }
+
+  .project-photo-time {
+    font-size: 7px;
+
+    margin-top: 6px;
+  }
+
+  .project-photo-number {
+    font-size: 10px;
+  }
+
+  .project-progress {
+    bottom: 17px;
+  }
+
+  .project-progress span {
+    width: 12px;
+  }
+
+  .project-progress span.active {
+    width: 25px;
+  }
+
+  .project-empty h1 {
+    font-size: 54px;
   }
 }

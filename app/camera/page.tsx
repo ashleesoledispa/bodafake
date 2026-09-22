@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -9,21 +13,37 @@ const EVENT_SLUG = "bodafake";
 export default function CameraPage() {
   const router = useRouter();
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef =
+    useRef<HTMLVideoElement>(null);
 
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [facingMode, setFacingMode] = useState<"user" | "environment">(
-    "environment"
-  );
+  const canvasRef =
+    useRef<HTMLCanvasElement>(null);
 
-  const [photo, setPhoto] = useState<string | null>(null);
-  const [cameraError, setCameraError] = useState("");
-  const [name, setName] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [stream, setStream] =
+    useState<MediaStream | null>(null);
+
+  const [facingMode, setFacingMode] =
+    useState<"user" | "environment">(
+      "environment"
+    );
+
+  const [photo, setPhoto] =
+    useState<string | null>(null);
+
+  const [cameraError, setCameraError] =
+    useState("");
+
+  const [name, setName] =
+    useState("");
+
+  const [uploading, setUploading] =
+    useState(false);
 
   useEffect(() => {
-    const savedName = localStorage.getItem("bodafake_guest_name");
+    const savedName =
+      localStorage.getItem(
+        "bodafake_guest_name"
+      );
 
     if (!savedName) {
       window.location.replace("/setup");
@@ -40,37 +60,60 @@ export default function CameraPage() {
       try {
         setCameraError("");
 
-        if (!navigator.mediaDevices?.getUserMedia) {
-          throw new Error("La cámara no está disponible en este navegador.");
+        if (
+          !navigator.mediaDevices?.getUserMedia
+        ) {
+          throw new Error(
+            "La cámara no está disponible en este navegador."
+          );
         }
 
-        const newStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode,
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-          audio: false,
-        });
+        const newStream =
+          await navigator.mediaDevices.getUserMedia(
+            {
+              video: {
+                facingMode,
+                width: {
+                  ideal: 1920,
+                },
+                height: {
+                  ideal: 1080,
+                },
+              },
+              audio: false,
+            }
+          );
 
         if (cancelled) {
-          newStream.getTracks().forEach((track) => track.stop());
+          newStream
+            .getTracks()
+            .forEach((track) =>
+              track.stop()
+            );
+
           return;
         }
 
         setStream(newStream);
 
         if (videoRef.current) {
-          videoRef.current.srcObject = newStream;
+          videoRef.current.srcObject =
+            newStream;
 
           try {
             await videoRef.current.play();
           } catch (error) {
-            console.error("VIDEO PLAY ERROR:", error);
+            console.error(
+              "VIDEO PLAY ERROR:",
+              error
+            );
           }
         }
       } catch (error) {
-        console.error("CAMERA ERROR:", error);
+        console.error(
+          "CAMERA ERROR:",
+          error
+        );
 
         setCameraError(
           "No pudimos acceder a tu cámara. Revisa los permisos del navegador."
@@ -87,13 +130,19 @@ export default function CameraPage() {
 
   useEffect(() => {
     return () => {
-      stream?.getTracks().forEach((track) => track.stop());
+      stream
+        ?.getTracks()
+        .forEach((track) =>
+          track.stop()
+        );
     };
   }, [stream]);
 
   const switchCamera = () => {
     setFacingMode((current) =>
-      current === "environment" ? "user" : "environment"
+      current === "environment"
+        ? "user"
+        : "environment"
     );
   };
 
@@ -101,31 +150,129 @@ export default function CameraPage() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
-    if (!video || !canvas || !video.videoWidth || !video.videoHeight) {
-      setCameraError("La cámara todavía no está lista. Intenta nuevamente.");
+    if (
+      !video ||
+      !canvas ||
+      !video.videoWidth ||
+      !video.videoHeight
+    ) {
+      setCameraError(
+        "La cámara todavía no está lista. Intenta nuevamente."
+      );
+
       return;
     }
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    const videoWidth =
+      video.videoWidth;
 
-    const context = canvas.getContext("2d");
+    const videoHeight =
+      video.videoHeight;
+
+    /*
+     * Normalizamos la orientación de la foto.
+     *
+     * Algunas cámaras móviles entregan el
+     * stream en formato vertical aunque el
+     * contenido visual esté orientado de otra
+     * manera. Para el proyecto necesitamos
+     * que la imagen final sea horizontal.
+     */
+    const needsRotation =
+      videoHeight > videoWidth;
+
+    if (needsRotation) {
+      canvas.width = videoHeight;
+      canvas.height = videoWidth;
+    } else {
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+    }
+
+    const context =
+      canvas.getContext("2d");
 
     if (!context) {
-      setCameraError("No pudimos preparar la foto.");
+      setCameraError(
+        "No pudimos preparar la foto."
+      );
+
       return;
     }
 
-    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.setTransform(
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    );
 
-    if (facingMode === "user") {
-      context.translate(canvas.width, 0);
-      context.scale(-1, 1);
+    context.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    /*
+     * Si el video llega vertical,
+     * lo rotamos 90° para guardar
+     * la imagen horizontal.
+     */
+    if (needsRotation) {
+      context.translate(
+        canvas.width / 2,
+        canvas.height / 2
+      );
+
+      context.rotate(
+        Math.PI / 2
+      );
+
+      /*
+       * Cámara frontal:
+       * mantenemos el efecto espejo.
+       */
+      if (facingMode === "user") {
+        context.scale(-1, 1);
+      }
+
+      context.drawImage(
+        video,
+        -videoWidth / 2,
+        -videoHeight / 2,
+        videoWidth,
+        videoHeight
+      );
+    } else {
+      /*
+       * Imagen horizontal normal.
+       */
+      if (facingMode === "user") {
+        context.translate(
+          canvas.width,
+          0
+        );
+
+        context.scale(-1, 1);
+      }
+
+      context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
     }
 
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const image = canvas.toDataURL("image/jpeg", 0.9);
+    const image =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.9
+      );
 
     setCameraError("");
     setPhoto(image);
@@ -138,18 +285,28 @@ export default function CameraPage() {
     setPhoto(null);
   };
 
-  const dataUrlToBlob = async (dataUrl: string) => {
-    const response = await fetch(dataUrl);
+  const dataUrlToBlob = async (
+    dataUrl: string
+  ) => {
+    const response =
+      await fetch(dataUrl);
+
     return await response.blob();
   };
 
   const publish = async () => {
     if (!photo || uploading) return;
 
-    const guestId = localStorage.getItem("bodafake_guest_id");
+    const guestId =
+      localStorage.getItem(
+        "bodafake_guest_id"
+      );
 
     if (!guestId) {
-      window.location.replace("/setup");
+      window.location.replace(
+        "/setup"
+      );
+
       return;
     }
 
@@ -158,7 +315,10 @@ export default function CameraPage() {
 
     try {
       // 1. Buscar evento
-      const { data: events, error: eventError } = await supabase
+      const {
+        data: events,
+        error: eventError,
+      } = await supabase
         .from("events")
         .select("id")
         .eq("slug", EVENT_SLUG)
@@ -166,38 +326,55 @@ export default function CameraPage() {
 
       if (eventError) {
         throw new Error(
-          `No pudimos encontrar la boda: ${eventError.message}`
+          `No pudimos encontrar el evento: ${eventError.message}`
         );
       }
 
       const event = events?.[0];
 
       if (!event) {
-        throw new Error("No encontramos la BodaFake.");
+        throw new Error(
+          "No encontramos el evento Ibiza Night."
+        );
       }
 
       // 2. Convertir foto
-      const blob = await dataUrlToBlob(photo);
+      const blob =
+        await dataUrlToBlob(photo);
 
       if (!blob || blob.size === 0) {
-        throw new Error("La foto está vacía. Intenta tomarla nuevamente.");
+        throw new Error(
+          "La foto está vacía. Intenta tomarla nuevamente."
+        );
       }
 
       // 3. Crear nombre único
       const fileName = `${crypto.randomUUID()}.jpg`;
+
       const filePath = `${event.id}/${guestId}/${fileName}`;
 
       // 4. Subir a Storage
-      const { error: uploadError } = await supabase.storage
+      const {
+        error: uploadError,
+      } = await supabase.storage
         .from("photos")
-        .upload(filePath, blob, {
-          contentType: "image/jpeg",
-          cacheControl: "31536000",
-          upsert: false,
-        });
+        .upload(
+          filePath,
+          blob,
+          {
+            contentType:
+              "image/jpeg",
+            cacheControl:
+              "31536000",
+            upsert: false,
+          }
+        );
 
       if (uploadError) {
-        console.error("STORAGE ERROR:", uploadError);
+        console.error(
+          "STORAGE ERROR:",
+          uploadError
+        );
 
         throw new Error(
           `No pudimos subir la foto: ${uploadError.message}`
@@ -205,28 +382,44 @@ export default function CameraPage() {
       }
 
       // 5. Obtener URL pública
-      const { data: publicUrlData } = supabase.storage
+      const {
+        data: publicUrlData,
+      } = supabase.storage
         .from("photos")
-        .getPublicUrl(filePath);
+        .getPublicUrl(
+          filePath
+        );
 
-      const imageUrl = publicUrlData?.publicUrl;
+      const imageUrl =
+        publicUrlData?.publicUrl;
 
       if (!imageUrl) {
-        throw new Error("No pudimos obtener la URL de la foto.");
+        throw new Error(
+          "No pudimos obtener la URL de la foto."
+        );
       }
 
-      // 6. Registrar foto en la base de datos
-      const { error: photoError } = await supabase.from("photos").insert({
-        event_id: event.id,
-        guest_id: guestId,
-        image_url: imageUrl,
-        is_visible: true,
-      });
+      // 6. Registrar foto
+      const {
+        error: photoError,
+      } = await supabase
+        .from("photos")
+        .insert({
+          event_id: event.id,
+          guest_id: guestId,
+          image_url: imageUrl,
+          is_visible: true,
+        });
 
       if (photoError) {
-        console.error("PHOTO DATABASE ERROR:", photoError);
+        console.error(
+          "PHOTO DATABASE ERROR:",
+          photoError
+        );
 
-        await supabase.storage.from("photos").remove([filePath]);
+        await supabase.storage
+          .from("photos")
+          .remove([filePath]);
 
         throw new Error(
           `No pudimos registrar la foto: ${photoError.message}`
@@ -234,19 +427,32 @@ export default function CameraPage() {
       }
 
       // 7. Guardar última foto
-      localStorage.setItem("bodafake_last_photo", imageUrl);
+      localStorage.setItem(
+        "bodafake_last_photo",
+        imageUrl
+      );
+
       localStorage.setItem(
         "bodafake_last_photo_at",
         new Date().toISOString()
       );
 
       // 8. Detener cámara
-      stream?.getTracks().forEach((track) => track.stop());
+      stream
+        ?.getTracks()
+        .forEach((track) =>
+          track.stop()
+        );
 
       // 9. Volver al mural
-      window.location.replace("/");
+      window.location.replace(
+        "/"
+      );
     } catch (error) {
-      console.error("PUBLISH ERROR:", error);
+      console.error(
+        "PUBLISH ERROR:",
+        error
+      );
 
       setCameraError(
         error instanceof Error
@@ -265,14 +471,23 @@ export default function CameraPage() {
           type="button"
           className="camera-back"
           onClick={() => {
-            stream?.getTracks().forEach((track) => track.stop());
-            window.location.replace("/");
+            stream
+              ?.getTracks()
+              .forEach((track) =>
+                track.stop()
+              );
+
+            window.location.replace(
+              "/"
+            );
           }}
         >
-          Volver
+          Salir
         </button>
 
-        <div className="camera-name">{name}</div>
+        <div className="camera-name">
+          {name}
+        </div>
       </div>
 
       {!photo ? (
@@ -280,14 +495,24 @@ export default function CameraPage() {
           <div className="camera-view">
             {cameraError ? (
               <div className="camera-error">
-                <h1>Algo salió mal.</h1>
+                <p className="setup-eyebrow">
+                  IBIZA NIGHT
+                </p>
 
-                <p>{cameraError}</p>
+                <h1>
+                  Algo salió mal.
+                </h1>
+
+                <p>
+                  {cameraError}
+                </p>
 
                 <button
                   type="button"
                   className="camera-error-button"
-                  onClick={() => window.location.reload()}
+                  onClick={() =>
+                    window.location.reload()
+                  }
                 >
                   Intentar nuevamente
                 </button>
@@ -299,7 +524,9 @@ export default function CameraPage() {
                 playsInline
                 muted
                 className={
-                  facingMode === "user" ? "camera-mirror" : ""
+                  facingMode === "user"
+                    ? "camera-mirror"
+                    : ""
                 }
               />
             )}
@@ -325,7 +552,7 @@ export default function CameraPage() {
               type="button"
               className="shutter"
               onClick={takePhoto}
-              aria-label="Tomar foto"
+              aria-label="Capturar momento"
               disabled={!!cameraError}
             >
               <span />
@@ -365,7 +592,9 @@ export default function CameraPage() {
               onClick={publish}
               disabled={uploading}
             >
-              {uploading ? "Publicando..." : "Publicar"}
+              {uploading
+                ? "Publicando..."
+                : "Publicar"}
             </button>
           </div>
         </>

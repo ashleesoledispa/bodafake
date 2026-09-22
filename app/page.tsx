@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import PushNotifications from "@/components/PushNotifications";
 
@@ -49,9 +49,6 @@ function formatRelativeTime(dateString: string) {
 }
 
 export default function Home() {
-  const backgroundVideoRef =
-    useRef<HTMLVideoElement>(null);
-
   const [realPhotos, setRealPhotos] =
     useState<RealPhoto[]>([]);
 
@@ -61,55 +58,8 @@ export default function Home() {
   const [checkingGuest, setCheckingGuest] =
     useState(true);
 
-  // Forzar reproducción automática del video
-  useEffect(() => {
-    const video = backgroundVideoRef.current;
-
-    if (!video) return;
-
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-
-    const forcePlay = async () => {
-      try {
-        await video.play();
-      } catch (error) {
-        console.error(
-          "BACKGROUND VIDEO AUTOPLAY ERROR:",
-          error
-        );
-      }
-    };
-
-    if (video.readyState >= 2) {
-      forcePlay();
-    } else {
-      video.addEventListener(
-        "loadeddata",
-        forcePlay,
-        { once: true }
-      );
-
-      video.addEventListener(
-        "canplay",
-        forcePlay,
-        { once: true }
-      );
-    }
-
-    return () => {
-      video.removeEventListener(
-        "loadeddata",
-        forcePlay
-      );
-
-      video.removeEventListener(
-        "canplay",
-        forcePlay
-      );
-    };
-  }, []);
+  const [menuOpen, setMenuOpen] =
+    useState(false);
 
   // Revisar si el invitado ya está registrado
   useEffect(() => {
@@ -154,7 +104,7 @@ export default function Home() {
 
         if (!event) {
           console.error(
-            "No existe el evento BodaFake."
+            "No existe el evento Ibiza Night."
           );
           return;
         }
@@ -213,7 +163,7 @@ export default function Home() {
     loadRealPhotos();
 
     const channel = supabase
-      .channel("bodafake-photo-wall")
+      .channel("ibiza-night-photo-wall")
       .on(
         "postgres_changes",
         {
@@ -236,77 +186,135 @@ export default function Home() {
   if (checkingGuest) {
     return (
       <main className="setup-loading">
-        <span>BODАFAKE</span>
+        <span>IBIZA NIGHT</span>
       </main>
     );
   }
 
   return (
-    <main className="app-shell">
+    <main className="app-shell ibiza-night-page">
       <PushNotifications />
 
-      <video
-        ref={backgroundVideoRef}
-        className="background-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
+      {/* FONDO IBIZA NIGHT */}
+      <div
+        className="ibiza-background"
         aria-hidden="true"
       >
-        <source
-          src="/background.mp4"
-          type="video/mp4"
-        />
-      </video>
+        <div className="ibiza-gradient" />
 
-      <div
-        className="background-overlay"
-        aria-hidden="true"
-      />
+        <div className="ibiza-sunset" />
 
-      <header className="topbar">
-        <div className="brand-lockup">
-          <img
-            className="bodafake-logo"
-            src="/bodafake-logo.png"
-            alt="BodaFake"
-          />
-
-          <span className="brand-by">by</span>
-
-          <img
-            className="vertigo-logo"
-            src="/vertigo-logo.png"
-            alt="Vértigo"
-          />
+        <div className="ibiza-window">
+          <div className="ibiza-window-frame">
+            <div className="ibiza-window-view">
+              <div className="ibiza-horizon" />
+              <div className="ibiza-sun" />
+              <div className="ibiza-sea" />
+            </div>
+          </div>
         </div>
+
+        <div className="ibiza-grain" />
+      </div>
+
+      <header className="topbar ibiza-topbar">
+        <div className="ibiza-brand">
+          <span className="ibiza-brand-main">
+            Ibiza
+          </span>
+
+          <span className="ibiza-brand-night">
+            Night
+          </span>
+        </div>
+
+        {/* MENÚ */}
+        <button
+          type="button"
+          className="ibiza-menu-button"
+          aria-label="Abrir menú"
+          aria-expanded={menuOpen}
+          onClick={() =>
+            setMenuOpen((previous) => !previous)
+          }
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </header>
 
-      <section className="event-heading">
+      {/* MENÚ DE NAVEGACIÓN */}
+      {menuOpen && (
+        <div
+          className="ibiza-menu-overlay"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="ibiza-menu"
+            onClick={(event) =>
+              event.stopPropagation()
+            }
+          >
+            <button
+              type="button"
+              className="ibiza-menu-close"
+              aria-label="Cerrar menú"
+              onClick={() =>
+                setMenuOpen(false)
+              }
+            >
+              ×
+            </button>
+
+            <button
+              type="button"
+              className="ibiza-menu-option"
+              onClick={() => {
+                window.location.href =
+                  "/project";
+              }}
+            >
+              <span>Proyectar</span>
+              <span className="ibiza-menu-arrow">
+                →
+              </span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <section className="event-heading ibiza-heading">
         <p className="eyebrow">
-          HASTA QUE LA FIESTA NOS SEPARE
+          NUESTRO BEREAL DE
         </p>
 
         <h1>
-          Nuestro propio BeReal⚠️
+          Ibiza
           <br />
-          de la BodaFake.
+          Night.
         </h1>
 
+        <p className="heading-description">
+          Tu vuelo acaba de despegar.
+          <br />
+          Captura cada momento del viaje.
+        </p>
+
         <h2 className="photo-prompt">
-          Comparte tu mejor foto o tu mejor borrachera
+          Guarda tu mejor
+          <br />
+          momento
         </h2>
       </section>
 
       <section
-        className="photo-wall"
-        aria-label="Mural de fotos"
+        className="photo-wall ibiza-photo-wall"
+        aria-label="Mural de fotos de Ibiza Night"
       >
         {realPhotos.map((photo) => (
           <article
-            className="polaroid"
+            className="polaroid ibiza-photo-card"
             key={`real-${photo.id}`}
             role="button"
             tabIndex={0}
@@ -338,7 +346,7 @@ export default function Home() {
               </p>
 
               <p className="photo-time">
-                {photo.time}
+                IBIZA NIGHT · {photo.time}
               </p>
             </div>
           </article>
@@ -346,7 +354,7 @@ export default function Home() {
       </section>
 
       <button
-        className="capture-button"
+        className="capture-button ibiza-capture-button"
         type="button"
         onClick={() => {
           window.location.href = "/camera";
@@ -359,12 +367,12 @@ export default function Home() {
           <span />
         </span>
 
-        <span>Capturar momento</span>
+        <span>Captura el momento</span>
       </button>
 
       {selectedPhoto && (
         <div
-          className="photo-lightbox"
+          className="photo-lightbox ibiza-lightbox"
           role="dialog"
           aria-modal="true"
           aria-label={`Foto de ${selectedPhoto.name}`}
@@ -400,6 +408,7 @@ export default function Home() {
               </strong>
 
               <span>
+                IBIZA NIGHT ·{" "}
                 {selectedPhoto.time}
               </span>
             </div>

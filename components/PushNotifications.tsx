@@ -251,7 +251,7 @@ export default function PushNotifications() {
     <div className="push-modal-backdrop">
       <div className="push-modal">
         <p className="push-modal-eyebrow">
-          BODАFAKE
+          IBIZA NIGHT
         </p>
 
         <h2>
@@ -260,7 +260,7 @@ export default function PushNotifications() {
 
         <p>
           Te avisaremos cuando llegue un
-          nuevo momento de la boda para que
+          nuevo momento del viaje para que
           puedas capturarlo.
         </p>
 

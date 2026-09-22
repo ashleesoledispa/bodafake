@@ -81,12 +81,14 @@ export default function SetupPage() {
     setError("");
 
     try {
-      const { data: events, error: eventError } =
-        await supabase
-          .from("events")
-          .select("id")
-          .eq("slug", EVENT_SLUG)
-          .limit(1);
+      const {
+        data: events,
+        error: eventError,
+      } = await supabase
+        .from("events")
+        .select("id")
+        .eq("slug", EVENT_SLUG)
+        .limit(1);
 
       if (eventError) {
         console.error(
@@ -95,7 +97,7 @@ export default function SetupPage() {
         );
 
         throw new Error(
-          `Error buscando la boda: ${eventError.message}`
+          `Error buscando el evento: ${eventError.message}`
         );
       }
 
@@ -103,7 +105,7 @@ export default function SetupPage() {
 
       if (!event) {
         throw new Error(
-          "El evento BodaFake no existe en Supabase."
+          "El evento Ibiza Night no existe en Supabase."
         );
       }
 
@@ -182,7 +184,7 @@ export default function SetupPage() {
       await enableNotifications();
     } catch (err) {
       console.error(
-        "BODAFAKE SETUP ERROR:",
+        "IBIZA NIGHT SETUP ERROR:",
         err
       );
 
@@ -212,19 +214,19 @@ export default function SetupPage() {
   };
 
   return (
-  <main className="setup-page">
-    <div className="setup-brand">
-      <img
-        src="/bodafake-by-vertigo-white.png"
-        alt="BodaFake by Vértigo"
-      />
-    </div>
+    <main className="setup-page">
+      <div className="setup-brand">
+        <img
+          src="/icon-512.png"
+          alt="Ibiza Night"
+        />
+      </div>
 
-    <div className="setup-card">
+      <div className="setup-card">
         {step === 1 && (
           <>
             <p className="setup-eyebrow">
-              BIENVENIDO A BODAFAKE
+              BIENVENIDO A IBIZA NIGHT
             </p>
 
             <h1>
@@ -234,8 +236,9 @@ export default function SetupPage() {
             </h1>
 
             <p className="setup-description">
-              Tu nombre aparecerá junto a las fotos
-              que compartas durante la boda.
+              Tu nombre aparecerá junto a las
+              fotos que compartas durante
+              el viaje.
             </p>
 
             <div className="setup-form">
@@ -277,8 +280,8 @@ export default function SetupPage() {
                 }
               >
                 {loading
-                  ? "Entrando..."
-                  : "Entrar a la boda"}
+                  ? "Preparando tu viaje..."
+                  : "Comenzar el viaje"}
               </button>
             </div>
           </>
@@ -291,15 +294,16 @@ export default function SetupPage() {
             </p>
 
             <h1>
-              Agrega BodaFake
+              Agrega Ibiza Night
               <br />
               a tu inicio.
             </h1>
 
             <p className="setup-description">
-              En iPhone necesitamos que BodaFake esté
-              en tu pantalla de inicio para poder
-              enviarte los momentos de la boda.
+              En iPhone necesitamos que Ibiza
+              Night esté en tu pantalla de
+              inicio para poder enviarte los
+              momentos del viaje.
             </p>
 
             <div className="ios-instructions">
@@ -332,7 +336,9 @@ export default function SetupPage() {
 
                 <p>
                   Abre{" "}
-                  <strong>BodaFake</strong>{" "}
+                  <strong>
+                    Ibiza Night
+                  </strong>{" "}
                   desde tu pantalla de inicio.
                 </p>
               </div>

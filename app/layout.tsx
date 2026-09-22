@@ -3,13 +3,13 @@ import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "BODАFAKE",
-  description: "El mural de fotos de la boda.",
+  title: "IBIZA NIGHT",
+  description: "Viaja en una noche.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "BODАFAKE",
+    title: "IBIZA NIGHT",
   },
 };
 

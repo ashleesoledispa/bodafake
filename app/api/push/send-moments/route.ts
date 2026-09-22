@@ -8,21 +8,23 @@ const supabaseAdmin = createClient(
 );
 
 webpush.setVapidDetails(
-  "mailto:bodafake@example.com",
+  "mailto:ibizanight@example.com",
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
   process.env.VAPID_PRIVATE_KEY!
 );
 
 const NOTIFICATION_TEXT =
-  "HORA DE CAPTURAR EN LA BODA FAKEEEE 🍸🥂💍";
+  "HORA DE CAPTURAR EN IBIZA NIGHT ✈️🌅";
 
 export async function GET(request: Request) {
   try {
-    const authHeader = request.headers.get("authorization");
+    const authHeader =
+      request.headers.get("authorization");
 
     if (
       process.env.CRON_SECRET &&
-      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+      authHeader !==
+        `Bearer ${process.env.CRON_SECRET}`
     ) {
       return NextResponse.json(
         {
@@ -36,18 +38,20 @@ export async function GET(request: Request) {
     const now = new Date().toISOString();
 
     // Buscar momentos que ya llegaron y todavía no han enviado
-    const { data: moments, error: momentsError } =
-      await supabaseAdmin
-        .from("moments")
-        .select(
-          "id, event_id, title, message, scheduled_at, active, notification_sent"
-        )
-        .eq("active", true)
-        .eq("notification_sent", false)
-        .lte("scheduled_at", now)
-        .order("scheduled_at", {
-          ascending: true,
-        });
+    const {
+      data: moments,
+      error: momentsError,
+    } = await supabaseAdmin
+      .from("moments")
+      .select(
+        "id, event_id, title, message, scheduled_at, active, notification_sent"
+      )
+      .eq("active", true)
+      .eq("notification_sent", false)
+      .lte("scheduled_at", now)
+      .order("scheduled_at", {
+        ascending: true,
+      });
 
     if (momentsError) {
       console.error(
@@ -79,15 +83,17 @@ export async function GET(request: Request) {
     for (const moment of moments) {
       // Invitados registrados antes o exactamente
       // en el momento de la notificación
-      const { data: guests, error: guestsError } =
-        await supabaseAdmin
-          .from("guests")
-          .select("id, registered_at")
-          .eq("event_id", moment.event_id)
-          .lte(
-            "registered_at",
-            moment.scheduled_at
-          );
+      const {
+        data: guests,
+        error: guestsError,
+      } = await supabaseAdmin
+        .from("guests")
+        .select("id, registered_at")
+        .eq("event_id", moment.event_id)
+        .lte(
+          "registered_at",
+          moment.scheduled_at
+        );
 
       if (guestsError) {
         console.error(
@@ -121,13 +127,15 @@ export async function GET(request: Request) {
 
       // Buscar solamente las suscripciones
       // pertenecientes a invitados elegibles
-      const { data: subscriptions, error: subscriptionsError } =
-        await supabaseAdmin
-          .from("push_subscriptions")
-          .select(
-            "id, guest_id, endpoint, p256dh, auth"
-          )
-          .in("guest_id", guestIds);
+      const {
+        data: subscriptions,
+        error: subscriptionsError,
+      } = await supabaseAdmin
+        .from("push_subscriptions")
+        .select(
+          "id, guest_id, endpoint, p256dh, auth"
+        )
+        .in("guest_id", guestIds);
 
       if (subscriptionsError) {
         console.error(
@@ -145,14 +153,16 @@ export async function GET(request: Request) {
         try {
           await webpush.sendNotification(
             {
-              endpoint: subscription.endpoint,
+              endpoint:
+                subscription.endpoint,
               keys: {
-                p256dh: subscription.p256dh,
+                p256dh:
+                  subscription.p256dh,
                 auth: subscription.auth,
               },
             },
             JSON.stringify({
-              title: "BodaFake",
+              title: "Ibiza Night",
               body: NOTIFICATION_TEXT,
               url: "/camera",
             })
@@ -177,7 +187,10 @@ export async function GET(request: Request) {
             await supabaseAdmin
               .from("push_subscriptions")
               .delete()
-              .eq("id", subscription.id);
+              .eq(
+                "id",
+                subscription.id
+              );
           }
         }
       }
@@ -192,7 +205,8 @@ export async function GET(request: Request) {
 
       processedMoments.push({
         moment_id: moment.id,
-        scheduled_at: moment.scheduled_at,
+        scheduled_at:
+          moment.scheduled_at,
         sent: momentSent,
         expired: momentExpired,
         guests: guestIds.length,
