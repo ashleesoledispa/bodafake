@@ -390,6 +390,42 @@ a {
     0 0 20px rgba(255, 75, 31, 0.2);
 }
 
+.ibiza-by {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+  margin-right: 85px;
+  padding-left: 24px;
+}
+
+.ibiza-by span {
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 8px;
+  font-weight: 500;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: rgba(245, 241, 230, 0.55);
+}
+
+.ibiza-by img {
+  display: block;
+
+  width: 135px;
+  height: auto;
+
+  object-fit: contain;
+
+  filter: brightness(0) invert(1);
+
+  opacity: 0.9;
+}
+
 .ibiza-brand-main {
   font-family: "Cormorant Garamond", serif;
 
@@ -2844,4 +2880,46 @@ a {
   .project-empty h1 {
     font-size: 54px;
   }
+}
+
+.ibiza-home-partner {
+  position: relative;
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 8px;
+  margin-bottom: 5px;
+}
+
+.ibiza-home-partner span {
+  font-family:
+    "DM Sans",
+    sans-serif;
+
+  font-size: 8px;
+  font-weight: 500;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: rgba(245, 241, 230, 0.5);
+}
+
+.ibiza-home-partner img {
+  display: block;
+
+  width: 155px;
+  height: auto;
+
+  object-fit: contain;
+
+  filter: brightness(0) invert(1);
+
+  opacity: 0.9;
 }

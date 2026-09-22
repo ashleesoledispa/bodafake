@@ -218,31 +218,40 @@ export default function Home() {
       </div>
 
       <header className="topbar ibiza-topbar">
-        <div className="ibiza-brand">
-          <span className="ibiza-brand-main">
-            Ibiza
-          </span>
+  <div className="ibiza-brand">
+    <span className="ibiza-brand-main">
+      Ibiza
+    </span>
 
-          <span className="ibiza-brand-night">
-            Night
-          </span>
-        </div>
+    <span className="ibiza-brand-night">
+      Night
+    </span>
+  </div>
 
-        {/* MENÚ */}
-        <button
-          type="button"
-          className="ibiza-menu-button"
-          aria-label="Abrir menú"
-          aria-expanded={menuOpen}
-          onClick={() =>
-            setMenuOpen((previous) => !previous)
-          }
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </header>
+  <div className="ibiza-by">
+    <span>by:</span>
+
+    <img
+      src="/logos.png"
+      alt="DVOHD ASE UDLA"
+    />
+  </div>
+
+  {/* MENÚ */}
+  <button
+    type="button"
+    className="ibiza-menu-button"
+    aria-label="Abrir menú"
+    aria-expanded={menuOpen}
+    onClick={() =>
+      setMenuOpen((previous) => !previous)
+    }
+  >
+    <span />
+    <span />
+    <span />
+  </button>
+</header>
 
       {/* MENÚ DE NAVEGACIÓN */}
       {menuOpen && (
@@ -283,7 +292,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       <section className="event-heading ibiza-heading">
         <p className="eyebrow">
           NUESTRO BEREAL DE
