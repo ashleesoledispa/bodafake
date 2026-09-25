@@ -13,7 +13,7 @@ type ProjectPhoto = {
 
 const EVENT_SLUG = "bodafake";
 
-const DISPLAY_TIME = 1 * 60 * 1000;
+const DISPLAY_TIME = 30 * 1000;
 
 function formatRelativeTime(dateString: string) {
   const date = new Date(dateString);
